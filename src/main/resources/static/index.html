@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <title>Document Tracking System</title>
+    <script src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js"
+            id="sap-ui-bootstrap"
+            data-sap-ui-theme="sap_bluecrystal"
+            data-sap-ui-libs="sap.m">
+    </script>
+    <script type="text/javascript">
+        sap.ui.getCore().attachInit(function () {
+            var app = new sap.m.App("docApp", {
+                initialPage: "page1"
+            });
+            var page1 = new sap.m.Page("page1", {
+                title: "Welcome",
+                showNavButton: false,
+                content: new sap.m.Button({
+                    text: "Go to page 2",
+                    press: function () {
+                        app.to("page2");
+                    }
+                })
+            });
+            var page2 = new sap.m.Page("page2", {
+                title: "Page 2",
+                showNavButton: true,
+                navButtonPress: function () {
+                    app.back();
+                }
+            });
+            app.addPage(page1).addPage(page2);
+            app.placeAt("content");
+        });
+    </script>
+</head>
+<body class="sapUiBody" id="content">
+
+</body>
+</html>
