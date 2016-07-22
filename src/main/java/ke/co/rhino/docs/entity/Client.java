@@ -1,10 +1,9 @@
 package ke.co.rhino.docs.entity;
 
 import javax.json.JsonObjectBuilder;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by user on 7/21/2016.
@@ -18,6 +17,10 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
     private String clientName;
     private String tel;
     private String pin;
+    @ManyToOne
+    private CabinetRow cabinetRow;
+    @OneToMany(mappedBy = "client")
+    private Set<Category> categories;
 
     public Client() {
     }
@@ -27,6 +30,8 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
         this.clientName = clientBuilder.clientName;
         this.tel = clientBuilder.tel;
         this.pin = clientBuilder.pin;
+        this.cabinetRow = clientBuilder.cabinetRow;
+        this.categories.addAll(clientBuilder.categories.stream().collect(Collectors.toSet()));
     }
 
     public static class ClientBuilder{
@@ -34,6 +39,8 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
         private final String clientName;
         private String tel;
         private String pin;
+        private CabinetRow cabinetRow;
+        private Set<Category> categories;
 
         public ClientBuilder(String clientName) {
             this.clientName = clientName;
@@ -51,6 +58,16 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
 
         public ClientBuilder pin(String pin){
             this.pin = pin;
+            return this;
+        }
+
+        public ClientBuilder cabinetRow(CabinetRow cabinetRow){
+            this.cabinetRow = cabinetRow;
+            return this;
+        }
+
+        public ClientBuilder categories(Set<Category> categories){
+            this.categories = categories;
             return this;
         }
 
@@ -76,6 +93,14 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
         return pin;
     }
 
+    public CabinetRow getCabinetRow() {
+        return cabinetRow;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
     @Override
     public Long getId() {
         return clientId;
@@ -87,5 +112,6 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
                 .add("clientName", clientName)
                 .add("tel",tel)
                 .add("pin",pin);
+        cabinetRow.addJson(builder);
     }
 }

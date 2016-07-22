@@ -24,6 +24,7 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     public Category(CategoryBuilder categoryBuilder) {
         this.categoryId = categoryBuilder.categoryId;
         this.description = categoryBuilder.description;
+
     }
 
     public static class CategoryBuilder{

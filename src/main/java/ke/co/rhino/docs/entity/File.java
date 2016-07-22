@@ -3,6 +3,7 @@ package ke.co.rhino.docs.entity;
 import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by user on 7/21/2016.
@@ -14,6 +15,8 @@ public class File extends AbstractEntity implements EntityItem<Long> {
     private Long fileId;
     @Column(nullable = false,unique = true)
     private String code;
+    @Enumerated(value = EnumType.STRING)
+    private FileStatus status;
     @ManyToOne
     private Category category;
     @OneToMany(mappedBy = "file")
@@ -25,8 +28,9 @@ public class File extends AbstractEntity implements EntityItem<Long> {
     public File(FileBuilder fileBuilder) {
         this.fileId = fileBuilder.fileId;
         this.code = fileBuilder.code;
+        this.status = fileBuilder.status;
         this.category = fileBuilder.category;
-        this.circulations = fileBuilder.circulations;
+        this.circulations.addAll(fileBuilder.circulations.stream().collect(Collectors.toSet()));
     }
 
     public static class FileBuilder{
@@ -35,6 +39,7 @@ public class File extends AbstractEntity implements EntityItem<Long> {
         private String code;
         private Category category;
         private Set<Circulation> circulations;
+        public FileStatus status;
 
         public FileBuilder() {
         }
@@ -46,6 +51,11 @@ public class File extends AbstractEntity implements EntityItem<Long> {
 
         public FileBuilder code(String code){
             this.code = code;
+            return this;
+        }
+
+        public FileBuilder status(FileStatus status){
+            this.status = status;
             return this;
         }
 
@@ -72,6 +82,10 @@ public class File extends AbstractEntity implements EntityItem<Long> {
         return code;
     }
 
+    public FileStatus getStatus() {
+        return status;
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -88,7 +102,8 @@ public class File extends AbstractEntity implements EntityItem<Long> {
     @Override
     public void addJson(JsonObjectBuilder builder) {
         builder.add("fileId",fileId)
-                .add("code",code);
+                .add("code",code)
+                .add("status", status.toString());
         category.addJson(builder);
     }
 }
