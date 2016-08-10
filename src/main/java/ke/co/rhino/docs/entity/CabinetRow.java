@@ -13,10 +13,11 @@ import java.util.stream.Collectors;
  * Created by akipkoech on 22/07/2016.
  */
 @Entity
-public class CabinetRow extends AbstractEntity implements EntityItem<Long>{
+public class CabinetRow extends AbstractEntity implements EntityItem<CabinetRowId>{
 
     @Id
     private Long rowNumber;
+    @Id
     @ManyToOne
     private Cabinet cabinet;
     @OneToMany(mappedBy = "row")
@@ -70,8 +71,8 @@ public class CabinetRow extends AbstractEntity implements EntityItem<Long>{
     }
 
     @Override
-    public Long getId() {
-        return rowNumber;
+    public CabinetRowId getId() {
+        return new CabinetRowId(rowNumber,cabinet.getId());
     }
 
     @Override

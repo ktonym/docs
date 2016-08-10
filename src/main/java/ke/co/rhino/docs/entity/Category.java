@@ -15,6 +15,8 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     private Long categoryId;
     @Column(unique = true, nullable = false)
     private String description;
+    @ManyToOne
+    private Client client;
     @OneToMany(mappedBy = "category")
     private Set<File> files;
 
@@ -31,10 +33,12 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
 
         private Long categoryId;
         private final String description;
+        private final Client client;
         private Set<File> files;
 
-        public CategoryBuilder(String description) {
+        public CategoryBuilder(String description, Client client) {
             this.description = description;
+            this.client = client;
         }
 
         public CategoryBuilder categoryId(Long categoryId){
@@ -65,6 +69,10 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
         return files;
     }
 
+    public Client getClient() {
+        return client;
+    }
+
     @Override
     public Long getId() {
         return categoryId;
@@ -74,5 +82,6 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     public void addJson(JsonObjectBuilder builder) {
         builder.add("categoryId",categoryId)
                 .add("description",description);
+        client.addJson(builder);
     }
 }
