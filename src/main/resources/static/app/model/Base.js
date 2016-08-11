@@ -13,9 +13,9 @@ Ext.define('Docs.model.Base', {
         proxy: {
             type: 'ajax',
             api : {
-                create: '{prefix}/{entityName:lowercase}/create.json',
+                create: '{prefix}/{entityName:lowercase}/store.json',
                 read: '{prefix}/{entityName:lowercase}/findAll.json',
-                update: '{prefix}/{entityName:lowercase}/update.json',
+                update: '{prefix}/{entityName:lowercase}/store.json',
                 destroy: '{prefix}/{entityName:lowercase}/delete.json'
             },
             reader: {

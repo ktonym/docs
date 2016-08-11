@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 public class Cabinet extends AbstractEntity implements EntityItem<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.AUTO)
     private Long cabinetId;
     @Enumerated(value = EnumType.STRING)
     private CabinetType cabinetType;
-    @Column(unique = true,nullable = false)
-    private Integer shelfNumber;
+//    @Column(unique = true,nullable = false)
+//    private Integer shelfNumber;
     @OneToMany(mappedBy = "cabinet")
     private Set<CabinetRow> cabinetRows;
 
@@ -27,7 +27,7 @@ public class Cabinet extends AbstractEntity implements EntityItem<Long> {
     public Cabinet(CabinetBuilder cabinetBuilder) {
         this.cabinetId = cabinetBuilder.cabinetId;
         this.cabinetType = cabinetBuilder.cabinetType;
-        this.shelfNumber = cabinetBuilder.shelfNumber;
+        //this.shelfNumber = cabinetBuilder.shelfNumber;
         this.cabinetRows.addAll((cabinetBuilder.cabinetRows).stream().collect(Collectors.toSet()));
     }
 
@@ -35,7 +35,7 @@ public class Cabinet extends AbstractEntity implements EntityItem<Long> {
 
         private Long cabinetId;
         private CabinetType cabinetType;
-        private Integer shelfNumber;
+        //private Integer shelfNumber;
         private Set<CabinetRow> cabinetRows;
 
         public CabinetBuilder() {
@@ -51,10 +51,10 @@ public class Cabinet extends AbstractEntity implements EntityItem<Long> {
             return this;
         }
 
-        public CabinetBuilder shelfNumber(Integer shelfNumber){
-            this.shelfNumber = shelfNumber;
-            return this;
-        }
+//        public CabinetBuilder shelfNumber(Integer shelfNumber){
+//            this.shelfNumber = shelfNumber;
+//            return this;
+//        }
 
         public CabinetBuilder cabinetRows(Set<CabinetRow> cabinetRows){
             this.cabinetRows = cabinetRows;
@@ -75,9 +75,9 @@ public class Cabinet extends AbstractEntity implements EntityItem<Long> {
         return cabinetType;
     }
 
-    public Integer getShelfNumber() {
-        return shelfNumber;
-    }
+//    public Integer getShelfNumber() {
+//        return shelfNumber;
+//    }
 
     public Set<CabinetRow> getCabinetRows() {
         return cabinetRows;
@@ -92,6 +92,14 @@ public class Cabinet extends AbstractEntity implements EntityItem<Long> {
     public void addJson(JsonObjectBuilder builder) {
         builder.add("cabinetId",cabinetId)
                 .add("cabinetType", cabinetType.toString())
-                .add("shelfNumber", shelfNumber);
+                .add("description", toString());
+    }
+
+    @Override
+    public String toString() {
+        return "Cabinet{" +
+                "cabinetId=" + cabinetId +
+                ", cabinetType=" + cabinetType +
+                '}';
     }
 }
