@@ -1,10 +1,10 @@
 Ext.define('Docs.model.Base', {
     extend: 'Ext.data.Model',
     
-    fields: [
-        { name: 'lastUpdate', type: 'date' }
-
-    ],
+    //fields: [
+    //    { name: 'lastUpdate', type: 'date' }
+    //
+    //],
     
     schema: {
         id: 'docsSchema',

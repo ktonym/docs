@@ -5,15 +5,28 @@
  */
 Ext.define('Docs.Application', {
     extend: 'Ext.app.Application',
-    
     name: 'Docs',
-
+    requires: ['Docs.view.LogonWindow','Docs.view.Main'],
     stores: [
         // TODO: add global / shared stores here
     ],
     
     launch: function () {
-        // TODO - Launch the application
+        var me = this;
+        me.logonWindow = Ext.widget('logon-window');
+        me.logonWindow.show();
+    },
+
+    doAfterLogon: function(userObj){
+        var me = this;
+        me.getUser = function(){
+            return userObj;
+        },
+        me.isAdmin = function(){
+            return userObj.adminRole === 'Y';
+        },
+        Ext.create('Docs.view.Main');
+        me.logonWindow.hide();
     },
 
     onAppUpdate: function () {

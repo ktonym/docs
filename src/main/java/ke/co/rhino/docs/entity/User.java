@@ -84,6 +84,7 @@ public class User extends AbstractEntity implements EntityItem<Long>{
     public void addJson(JsonObjectBuilder builder) {
         builder.add("userId", userId)
                 .add("firstName", firstName)
-                .add("surname", surname);
+                .add("surname", surname)
+                .add("fullName", firstName + " " + surname);
     }
 }

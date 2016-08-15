@@ -16,6 +16,7 @@ public class Circulation extends AbstractEntity implements EntityItem<Long> {
     private Long circulationId;
     private LocalDate borrowed;
     private Period duration;
+    private LocalDate returned;
     @ManyToOne
     private User user;
     @ManyToOne
@@ -28,6 +29,7 @@ public class Circulation extends AbstractEntity implements EntityItem<Long> {
         this.circulationId = circulationBuilder.circulationId;
         this.borrowed = circulationBuilder.borrowed;
         this.duration = circulationBuilder.duration;
+        this.returned = circulationBuilder.returned;
         this.user = circulationBuilder.user;
         this.file = circulationBuilder.file;
     }
@@ -36,6 +38,7 @@ public class Circulation extends AbstractEntity implements EntityItem<Long> {
         private Long circulationId;
         private LocalDate borrowed;
         private Period duration;
+        private LocalDate returned;
         private User user;
         private File file;
 
@@ -54,6 +57,11 @@ public class Circulation extends AbstractEntity implements EntityItem<Long> {
 
         public CirculationBuilder duration(Period duration){
             this.duration = duration;
+            return this;
+        }
+
+        public CirculationBuilder returned(LocalDate returned){
+            this.returned = returned;
             return this;
         }
 
@@ -101,7 +109,8 @@ public class Circulation extends AbstractEntity implements EntityItem<Long> {
     public void addJson(JsonObjectBuilder builder) {
         builder.add("circulationId",circulationId)
                 .add("borrowed",borrowed == null ? "" : DATE_FORMATTER_yyyyMMdd.format(borrowed))
-                .add("duration",duration == null ? 0 : duration.getDays());
+                .add("duration",duration == null ? 0 : duration.getDays())
+                .add("returned",returned == null ? "" : DATE_FORMATTER_yyyyMMdd.format(returned));
         user.addJson(builder);
         file.addJson(builder);
     }

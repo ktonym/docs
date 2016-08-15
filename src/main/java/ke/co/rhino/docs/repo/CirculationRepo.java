@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 /**
@@ -19,5 +20,9 @@ public interface CirculationRepo extends PagingAndSortingRepository<Circulation,
     Page<Circulation> findByFile(File file, Pageable pageable);
 
     Optional<Circulation> getOne(Long circulationId);
+
+    Page<Circulation> findByBorrowedBetween(LocalDate start, LocalDate end, Pageable pageable);
+
+    Page<Circulation> findByReturnedBetween(LocalDate start, LocalDate end, Pageable pageable);
 
 }
