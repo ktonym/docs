@@ -1,4 +1,4 @@
-Ext.define('Docs.view.circulation.Circulation',{
+Ext.define('Docs.view.circulation.CirculationForm',{
     extend: 'Ext.form.Panel',
     alias: 'widget.circulation-form',
     layout: 'anchor',

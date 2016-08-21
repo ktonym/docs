@@ -26,6 +26,13 @@ public class CabinetHandler extends AbstractHandler {
     @Autowired
     private ICabinetService service;
 
+    @RequestMapping(value = "/tree", method = RequestMethod.GET, produces = {"application/json"})
+    @ResponseBody
+    public String getTree(){
+        String actionUsername = "akipkoech";
+        return null;
+    }
+
     @RequestMapping(value = "/store", method = RequestMethod.POST, produces = {"application/json"})
     @ResponseBody
     public String store(@RequestParam(value = "data")String jsonData,HttpServletRequest request){

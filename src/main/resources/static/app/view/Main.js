@@ -1,6 +1,7 @@
 Ext.define('Docs.view.Main',{
-   extend: 'Ext.container.Viewport',
+   extend: 'Ext.container.Container',
     requires: ['Docs.view.MainHeader','Docs.view.MainCards','Ext.layout.container.VBox'],
+    plugins: 'viewport',
     padding: 5,
     layout: {
         type: 'vbox',

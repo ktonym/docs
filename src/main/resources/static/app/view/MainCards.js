@@ -1,7 +1,8 @@
 Ext.define('Docs.view.MainCards',{
     extend: 'Ext.container.Container',
     alias: 'widget.main-cards',
-    requires: [''],
+    requires: ['Docs.view.cabinet.CabinetCard','Docs.view.circulation.CirculationCard',
+        'Docs.view.client.ClientCard','Docs.view.user.UserCard'],
     layout: 'card',
     items: [
         {

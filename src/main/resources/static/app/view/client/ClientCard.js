@@ -1,7 +1,7 @@
 Ext.define('Docs.view.client.ClientCard',{
     extend: 'Ext.panel.Panel',
     alias: 'widget.client-card',
-    requires: ['Docs.view.client.ClientList','Docs.view.client.ClientForm'],
+    requires: ['Docs.view.client.ClientList','Docs.view.cabinet.ClientForm'],
     layout: 'hbox',
     items: [
         {

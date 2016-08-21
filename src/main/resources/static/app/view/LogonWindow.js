@@ -1,37 +1,55 @@
 Ext.define('Docs.view.LogonWindow',{
-    extend: 'Ext.panel.Window',
+        extend: 'Ext.window.Window',
         xtype: 'logon-window',
+        requires: ['Docs.view.LogonController'],
+        controller: 'logon',
+        closable: false,
         width: 300,
         height: 200,
         title: 'Please login to continue',
-        items: [{
-            xtype: 'textfield',
-            fieldLabel: 'User Name',
-            name: 'username',
-            allowBlank: false,
-            validateOnBlur: true,
-            emptyText: 'Enter a Username'
-        }, {
-            xtype: 'textfield',
-            name: 'password',
-            fieldLabel: 'Password',
-            inputType: 'password',
-            validateOnBlur: true,
-            allowBlank: false
-        },{
-            xtype: 'toolbar',
-            ui:'footer',
-            layout: {
-                pack: 'end',
-                type: 'hbox'
-            },
-            items: [{
-                xtype: 'button',
-                text: 'Logon'
-            }]
-        }]
+        bodyPadding: 10,
+        iconCls: 'fa fa-key fa-lg',
+        items: [
+            {
+                xtype: 'form',
+                reference: 'form',
+                bodyPadding: 15,
+                defaults:{
+                    xtype: 'textfield',
+                    anchor: '100%',
+                    allowBlank: false
+                },
+                msgTarget: 'under',
+                items: [{
+                    fieldLabel: 'User Name',
+                    name: 'username',
+                    validateOnBlur: true,
+                    emptyText: 'Enter a Username'
+                }, {
+                    name: 'password',
+                    fieldLabel: 'Password',
+                    inputType: 'password',
+                    validateOnBlur: true
+                },{
+                    xtype: 'toolbar',
+                    ui:'footer',
+                    layout: {
+                        pack: 'end',
+                        type: 'hbox'
+                    },
+                    items: [{
+                        xtype: 'button',
+                        text: 'Logon',
+                        formBind: true,
+                        handler: 'doLogin'
+                    }]
+                }]
+            }
+
+        ]
+        
 },
     function(){
-        Ext.Msg.alert("Login Window Loaded");
+        console.log('Logon window loaded..');
     }
 );

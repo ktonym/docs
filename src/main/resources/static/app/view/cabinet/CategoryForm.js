@@ -10,7 +10,7 @@ Ext.define('Docs.view.cabinet.CategoryForm',{
             xtype: 'fieldset',
             padding: 10,
             fieldDefaults: {
-                anchor: '100%',
+                anchor: '100%'
             },
             title: 'Category Entry',
             items: [

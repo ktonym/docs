@@ -9,7 +9,7 @@ Ext.define('Docs.view.MainHeader',{
     items: [
         {
             xtype: 'container',
-            width: 300,
+            width: 300
         },
         {
             xtype: 'toolbar',
