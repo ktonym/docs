@@ -8,7 +8,7 @@ Ext.define('Docs.Application', {
     name: 'Docs',
     requires: ['Docs.view.LogonWindow','Docs.view.Main'],
     stores: [
-        // TODO: add global / shared stores here
+        'Docs.store.CabinetTree'
     ],
     
     launch: function () {

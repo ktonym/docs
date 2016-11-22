@@ -15,9 +15,7 @@ import java.util.Optional;
 public interface FileRepo extends PagingAndSortingRepository<File,Long> {
 
     Optional<File> getOne(Long fileId);
-
     Page<File> findByCategory(Category category,Pageable pageable);
-
     Page<File> findByCategoryClient(Client client,Pageable pageable);
 
 }

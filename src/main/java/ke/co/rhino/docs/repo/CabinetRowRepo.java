@@ -19,4 +19,6 @@ public interface CabinetRowRepo extends PagingAndSortingRepository<CabinetRow, C
 
     long countByCabinet(Cabinet cabinet);
 
+    CabinetRow findByCabinetAndRowNo(Cabinet cabinet, Long rowNo);
+
 }

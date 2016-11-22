@@ -30,7 +30,7 @@ Ext.define('Docs.view.LogonController',{
     onLoginSuccess: function () {
         this.getView().unmask();
         this.getView().close();
-        console.log('about to load main window..');
-       Ext.create('Docs.view.Main').show();
+        
+       Ext.widget('app-main');
     }
 });

@@ -1,11 +1,11 @@
 Ext.define('Docs.view.circulation.CirculationList',{
     extend: 'Ext.grid.Panel',
     alias: 'widget.circulation-list',
-    viewConfig: {
-        markDirty: false,
-        emptyText: 'There are no circulation records to display...'
-    },
-    store: 'Circulation',
+    // viewConfig: {
+    //     markDirty: false,
+    //     emptyText: 'There are no circulation records to display...'
+    // },
+    // store: 'Circulation', TODO create circulation store
     title: 'File Circulation',
     columns: [
         {

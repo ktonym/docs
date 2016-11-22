@@ -28,7 +28,7 @@ public class Cabinet extends AbstractEntity implements EntityItem<Long> {
         this.cabinetId = cabinetBuilder.cabinetId;
         this.cabinetType = cabinetBuilder.cabinetType;
         //this.shelfNumber = cabinetBuilder.shelfNumber;
-        this.cabinetRows.addAll((cabinetBuilder.cabinetRows).stream().collect(Collectors.toSet()));
+//        this.cabinetRows.addAll((cabinetBuilder.cabinetRows).stream().collect(Collectors.toSet()));
     }
 
     public static class CabinetBuilder{
@@ -36,7 +36,7 @@ public class Cabinet extends AbstractEntity implements EntityItem<Long> {
         private Long cabinetId;
         private CabinetType cabinetType;
         //private Integer shelfNumber;
-        private Set<CabinetRow> cabinetRows;
+//        private Set<CabinetRow> cabinetRows;
 
         public CabinetBuilder() {
         }
@@ -56,10 +56,10 @@ public class Cabinet extends AbstractEntity implements EntityItem<Long> {
 //            return this;
 //        }
 
-        public CabinetBuilder cabinetRows(Set<CabinetRow> cabinetRows){
+        /*public CabinetBuilder cabinetRows(Set<CabinetRow> cabinetRows){
             this.cabinetRows = cabinetRows;
             return this;
-        }
+        }*/
 
         public Cabinet build(){
             return new Cabinet(this);

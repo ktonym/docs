@@ -1,10 +1,10 @@
 Ext.define('Docs.view.client.ClientList',{
     extend: 'Ext.grid.Panel',
     alias: 'widget.client-list',
-    viewConfig: {
-        markDirty: false,
-        emptyText: 'There are no client records to display...'
-    },
+    // viewConfig: {
+    //     markDirty: false,
+    //     emptyText: 'There are no client records to display...'
+    // },
     store: 'Client',
     title: 'Client Listing',
     columns: [

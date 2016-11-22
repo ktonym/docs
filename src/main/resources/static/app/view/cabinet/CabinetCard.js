@@ -1,18 +1,23 @@
 Ext.define('Docs.view.cabinet.CabinetCard',{
     extend: 'Ext.panel.Panel',
     alias: 'widget.cabinet-card',
-    requires: ['Ext.layout.container.HBox',//'Docs.view.cabinet.CabinetTree',
-        'Docs.view.cabinet.CabinetForm'],
+    requires: ['Ext.layout.container.HBox','Docs.view.cabinet.CabinetGrid',
+        'Docs.view.cabinet.CabinetForm','Docs.view.cabinet.CabinetController','Docs.view.cabinet.CabinetModel'],
+    viewModel: 'cabinet',
+    controller: 'cabinet',
     layout: 'hbox',
+    padding: 5,
+    showBorder: true,
     items: [
         {
-            //xtype: 'cabinet-tree',
-            xtype: 'container',
-            flex: 1
+            xtype: 'cabinet-grid',
+            flex: 2,
+            showBorder: true
         },
         {
             xtype: 'cabinet-form',
-            flex: 2
+            flex: 3,
+            padding: 10
         }
     ]
 

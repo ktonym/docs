@@ -18,6 +18,10 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
     private String tel;
     private String pin;
     @ManyToOne
+    /*@JoinColumns({
+            @JoinColumn(name = "rowNumber", referencedColumnName = "rowNumber"),
+            @JoinColumn(name = "cabinetId")
+    })*/
     private CabinetRow cabinetRow;
     @OneToMany(mappedBy = "client")
     private Set<Category> categories;

@@ -82,7 +82,9 @@ public class CabinetRowService implements ICabinetRowService {
             return ResultFactory.getFailResult("Invalid cabinet ID specified. Kindly provide a valid, non-null cabinet.");
         }
 
-        CabinetRowId cabinetRowId = new CabinetRowId(rowNumber,cabinetId);
+        Cabinet cab = cabinetRepo.findOne(cabinetId);
+
+        CabinetRowId cabinetRowId = new CabinetRowId(rowNumber,cab);
 
         Optional<CabinetRow> rowOpt = repo.getOne(cabinetRowId);
 

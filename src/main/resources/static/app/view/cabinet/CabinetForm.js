@@ -21,15 +21,17 @@ Ext.define('Docs.view.cabinet.CabinetForm',{
                 {
                     xtype: 'combobox',
                     name: 'cabinetType',
+                    fieldLabel: 'Cabinet Type',
                     queryMode: 'local',
-                    store: 'CabinetType',
-                    valueField: 'userId',
+                    // store: 'CabinetType',
+                    store: ['CLOSED','OPEN'],
+                    // valueField: 'userId',
                     listConfig: {
                         minWidth: 300
-                    },
-                    tpl: Ext.create('Ext.XTemplate','<tpl for=".">',
-                        '<div class="x-boundlist-item"><b>{cabinetType}</b> </div>','</tpl>'),
-                    displayTpl: Ext.create('Ext.XTemplate','<tpl for=".">', '{cabinetType}', '</tpl>')
+                    }
+                    // ,tpl: Ext.create('Ext.XTemplate','<tpl for=".">',
+                    //     '<div class="x-boundlist-item"><b>{cabinetType}</b> </div>','</tpl>'),
+                    // displayTpl: Ext.create('Ext.XTemplate','<tpl for=".">', '{cabinetType}', '</tpl>')
                 },
                 {
                     xtype: 'toolbar',
@@ -40,18 +42,19 @@ Ext.define('Docs.view.cabinet.CabinetForm',{
                     },
                     items: [{
                         xtype: 'button',
-                        iconCls: 'delete',
+                        iconCls: 'x-fa fa-remove',
                         itemId: 'deleteBtn',
                         disabled: true,
                         text: 'Delete'
                     },{
                         xtype: 'button',
                         itemId: 'addRowBtn',
+                        iconCls: 'x-fa fa-plus',
                         disabled: true,
                         text: 'Add Row'
                     },{
                         xtype: 'button',
-                        iconCls: 'save',
+                        iconCls: 'x-fa fa-save',
                         itemId: 'saveBtn',
                         text: 'Save'
                     }]

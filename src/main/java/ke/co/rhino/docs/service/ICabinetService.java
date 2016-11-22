@@ -12,7 +12,7 @@ public interface ICabinetService {
 
     Result<Cabinet> store(Long cabinetId,
                           CabinetType cabinetType,
-                          Integer shelfNumber,
+                          //Integer shelfNumber,
                           String actionUsername);
 
     Result<Cabinet> remove(Long cabinetId,String actionUsername);

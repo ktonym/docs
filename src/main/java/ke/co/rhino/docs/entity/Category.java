@@ -14,6 +14,7 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long categoryId;
     @Column(unique = true, nullable = false)
+    private String name;
     private String description;
     @ManyToOne
     private Client client;
@@ -26,19 +27,29 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     public Category(CategoryBuilder categoryBuilder) {
         this.categoryId = categoryBuilder.categoryId;
         this.description = categoryBuilder.description;
-
+        this.name = categoryBuilder.name;
     }
 
     public static class CategoryBuilder{
 
         private Long categoryId;
-        private final String description;
+        private String description;
         private final Client client;
         private Set<File> files;
+        public String name;
 
-        public CategoryBuilder(String description, Client client) {
-            this.description = description;
+        public CategoryBuilder(Client client) {
             this.client = client;
+        }
+
+        public CategoryBuilder name(String name){
+            this.name = name;
+            return this;
+        }
+
+        public CategoryBuilder description(String description){
+            this.description = description;
+            return this;
         }
 
         public CategoryBuilder categoryId(Long categoryId){
@@ -81,7 +92,8 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     @Override
     public void addJson(JsonObjectBuilder builder) {
         builder.add("categoryId",categoryId)
-                .add("description",description);
+                .add("name", name)
+                .add("description",description==null?"":description);
         client.addJson(builder);
     }
 }

@@ -29,7 +29,7 @@ public class CabinetService implements ICabinetService {
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<Cabinet> store(Long cabinetId, CabinetType cabinetType, Integer shelfNumber, String actionUsername) {
+    public Result<Cabinet> store(Long cabinetId, CabinetType cabinetType, /*Integer shelfNumber,*/ String actionUsername) {
 
         Cabinet.CabinetBuilder builder = new Cabinet.CabinetBuilder();
 
@@ -37,11 +37,12 @@ public class CabinetService implements ICabinetService {
             return ResultFactory.getFailResult("Please specify a valid cabinet type. Creation/update failed.");
         }
 
-        if(shelfNumber==null){
-            return ResultFactory.getFailResult("Please specify a valid non-empty shelf number. Creation/update failed.");
-        }
+//        if(shelfNumber==null){
+//            return ResultFactory.getFailResult("Please specify a valid non-empty shelf number. Creation/update failed.");
+//        }
 
         if(cabinetId==null){
+
 
         } else {
 
@@ -52,7 +53,7 @@ public class CabinetService implements ICabinetService {
 
         }
 
-        Cabinet cabinet = builder.cabinetType(cabinetType).shelfNumber(shelfNumber).build();
+        Cabinet cabinet = builder.cabinetType(cabinetType).build();
 
         repo.save(cabinet);
 

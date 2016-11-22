@@ -2,8 +2,10 @@ package ke.co.rhino.docs.repo;
 
 import ke.co.rhino.docs.entity.CabinetRow;
 import ke.co.rhino.docs.entity.Client;
+import org.springframework.data.domain.Page;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -12,5 +14,8 @@ import java.util.Set;
 public interface ClientRepo extends PagingAndSortingRepository<Client,Long> {
 
     long countByCabinetRow(CabinetRow row);
-
+    Optional<Client> getOne(Long clientId);
+    Optional<Client> findByPin(String pin);
+    Optional<Client> findByClientName(String clientName);
+    Optional<Page<Client>> findByNameLike(String searchStr);
 }

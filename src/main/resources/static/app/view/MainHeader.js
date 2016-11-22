@@ -30,6 +30,9 @@ Ext.define('Docs.view.MainHeader',{
                     xtype: 'button',
                     itemId: 'circulationBtn',
                     text: 'Circulation'
+                    // bind: {
+                    //     hidden: {}
+                    // }
                 },
                 {
                     xtype: 'button',

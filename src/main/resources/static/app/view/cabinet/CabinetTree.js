@@ -2,10 +2,10 @@ Ext.define('Docs.view.cabinet.CabinetTree',{
     extend: 'Ext.tree.Panel',
     alias: 'widget.cabinet-tree',
     title: 'Shelf -> Rows -> Clients',
-    requires: ['Docs.store.CabinetTree'],
-    store: 'CabinetTree',
+    // requires: ['Docs.store.CabinetTree'],
+    store: Ext.data.StoreManager.lookup('cabinetTreeStore'),
     lines: true,
-    rootVisible: false,
+    // rootVisible: false,
     hideHeaders: true,
     viewConfig: {
         preserveScrollOnRefresh: true

@@ -8,29 +8,29 @@ import java.io.Serializable;
 public class CabinetRowId implements Serializable {
 
     Long rowNumber;
-    Long cabinetId;
+    Cabinet cabinet;
 
-    public CabinetRowId(Long rowNumber, Long cabinetId) {
+    public CabinetRowId(Long rowNumber, Cabinet cabinet) {
         this.rowNumber = rowNumber;
-        this.cabinetId = cabinetId;
+        this.cabinet = cabinet;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof CabinetRowId)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         CabinetRowId that = (CabinetRowId) o;
 
         if (!rowNumber.equals(that.rowNumber)) return false;
-        return cabinetId.equals(that.cabinetId);
+        return cabinet.equals(that.cabinet);
 
     }
 
     @Override
     public int hashCode() {
         int result = rowNumber.hashCode();
-        result = 31 * result + cabinetId.hashCode();
+        result = 31 * result + cabinet.hashCode();
         return result;
     }
 }

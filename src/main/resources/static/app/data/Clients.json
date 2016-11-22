@@ -1,0 +1,9 @@
+{
+  "clients": [
+    { "name": "Jabu Investments Ltd", "id": 1, "tel": "08898989", "pin" : "P900990909L"},
+    { "name": "Rhino Infotech Ltd", "id": 2, "tel": "747474747", "pin" : "P123455454K "},
+    { "name": "Wakulima Ltd", "id":3, "tel": "2344", "pin" : "P999998765M"},
+    { "name": "Western Express", "id":4 , "tel": "43343", "pin" : "P2323877009N"},
+    { "name": "Espa Networks", "id":5 , "tel": "9098", "pin" : "P6757876587K"}
+  ]
+}

@@ -1,8 +1,7 @@
 package ke.co.rhino.docs.web;
 
-import ke.co.rhino.docs.entity.Cabinet;
-import ke.co.rhino.docs.entity.CabinetType;
-import ke.co.rhino.docs.service.ICabinetService;
+import ke.co.rhino.docs.entity.CabinetRow;
+import ke.co.rhino.docs.service.ICabinetRowService;
 import ke.co.rhino.docs.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,53 +16,49 @@ import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by akipkoech on 22/07/2016.
+ * Created by user on 20-Nov-16.
  */
-@Controller
-@RequestMapping("/cabinet")
-public class CabinetHandler extends AbstractHandler {
+@Controller()
+@RequestMapping("/cabinetrow")
+public class CabinetRowHandler extends AbstractHandler{
 
     @Autowired
-    private ICabinetService service;
-
-    @RequestMapping(value = "/tree", method = RequestMethod.GET, produces = {"application/json"})
-    @ResponseBody
-    public String getTree(){
-        String actionUsername = "akipkoech";
-        return null;
-    }
+    private ICabinetRowService cabinetRowService;
 
     @RequestMapping(value = "/store", method = RequestMethod.POST, produces = {"application/json"})
     @ResponseBody
-    public String store(@RequestParam(value = "data")String jsonData,HttpServletRequest request){
+    public String store(@RequestParam(value = "data",required = true) String jsonData, HttpServletRequest request){
 
         JsonObject jsonObject = parseJsonObject(jsonData);
+
+        Long rowNumber = ((JsonNumber) jsonObject.get("rowNumber")).longValue();
         Long cabinetId = ((JsonNumber) jsonObject.get("cabinetId")).longValue();
-        CabinetType cabinetType = CabinetType.valueOf(jsonObject.getString("cabinetType"));
-        Integer shelfNumber = getIntegerValue(jsonObject.get("shelfNumber"));
-        String actionUsername = "akipkoech";
 
-        Result<Cabinet> ar = service.store(cabinetId,cabinetType,/*shelfNumber,*/actionUsername);
-        if(ar.isSuccess()){
-           return getJsonSuccessData(ar.getData());
-        } else {
-           return getJsonErrorMsg(ar.getMsg());
-        }
-    }
+        Result<CabinetRow> ar = cabinetRowService.store(rowNumber,cabinetId,"AKipkoech");
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST, produces = {"application/json"})
-    @ResponseBody
-    public String remove(@RequestParam(value = "cabinetId")String cabinetIdStr,HttpServletRequest request){
-
-        Long cabinetId = Long.getLong(cabinetIdStr);
-        String actionUsername = "akipkoech";
-
-        Result<Cabinet> ar = service.remove(cabinetId, actionUsername);
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
         } else {
             return getJsonErrorMsg(ar.getMsg());
         }
+
+    }
+
+    @RequestMapping(value="/delete", method = RequestMethod.POST, produces = {"application/json"})
+    @ResponseBody
+    public String remove(@RequestParam(value = "data") String jsonData){
+
+        JsonObject jsonObject = parseJsonObject(jsonData);
+        Long cabinetId = ((JsonNumber) jsonObject.get("cabinetRowId")).longValue();
+        Long rowNumber = ((JsonNumber) jsonObject.get("rowNumber")).longValue();
+        Result<CabinetRow> ar = cabinetRowService.remove(rowNumber, cabinetId, "akipkoech");
+
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
+
     }
 
     @RequestMapping(value = "/findAll", method = RequestMethod.GET, produces = {"application/json"})
@@ -73,13 +68,14 @@ public class CabinetHandler extends AbstractHandler {
         int page = Integer.valueOf(request.getParameter("page"));
         int size = Integer.valueOf(request.getParameter("limit"));
         String actionUsername = "akipkoech";
-        Result<Page<Cabinet>> ar = service.findAll(page,size,actionUsername);
+        Result<Page<CabinetRow>> ar =  cabinetRowService.findAll(page,size,actionUsername);
+
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
         } else {
             return getJsonErrorMsg(ar.getMsg());
         }
-    }
 
+    }
 
 }

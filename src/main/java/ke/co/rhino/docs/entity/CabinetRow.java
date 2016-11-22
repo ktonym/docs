@@ -2,10 +2,7 @@ package ke.co.rhino.docs.entity;
 
 
 import javax.json.JsonObjectBuilder;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,6 +10,7 @@ import java.util.stream.Collectors;
  * Created by akipkoech on 22/07/2016.
  */
 @Entity
+@IdClass(CabinetRowId.class)
 public class CabinetRow extends AbstractEntity implements EntityItem<CabinetRowId>{
 
     @Id
@@ -20,7 +18,7 @@ public class CabinetRow extends AbstractEntity implements EntityItem<CabinetRowI
     @Id
     @ManyToOne
     private Cabinet cabinet;
-    @OneToMany(mappedBy = "row")
+    @OneToMany(mappedBy = "cabinetRow")
     private Set<Client> clients;
 
     public CabinetRow() {
@@ -72,7 +70,7 @@ public class CabinetRow extends AbstractEntity implements EntityItem<CabinetRowI
 
     @Override
     public CabinetRowId getId() {
-        return new CabinetRowId(rowNumber,cabinet.getId());
+        return new CabinetRowId(rowNumber,cabinet);
     }
 
     @Override

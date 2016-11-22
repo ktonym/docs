@@ -1,11 +1,11 @@
 Ext.define('Docs.view.user.UserList',{
     extend: 'Ext.grid.Panel',
     alias: 'widget.user-list',
-    viewConfig: {
-        markDirty: false,
-        emptyText: 'There are no user records to display...'
-    },
-    store: 'User',
+    // viewConfig: {
+    //     markDirty: false,
+    //     emptyText: 'There are no user records to display...'
+    // },
+    // store: 'User', TODO create user store
     title: 'Users Listing',
     columns: [
         {
