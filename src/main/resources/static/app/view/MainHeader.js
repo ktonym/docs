@@ -24,11 +24,13 @@ Ext.define('Docs.view.MainHeader',{
                 {
                     xtype: 'button',
                     itemId: 'cabinetBtn',
+                    iconCls: 'x-fa fa-database',
                     text: 'Cabinets and Shelves'
                 },
                 {
                     xtype: 'button',
                     itemId: 'circulationBtn',
+                    iconCls: 'x-fa fa-refresh',
                     text: 'Circulation'
                     // bind: {
                     //     hidden: {}
@@ -37,11 +39,13 @@ Ext.define('Docs.view.MainHeader',{
                 {
                     xtype: 'button',
                     itemId: 'usersBtn',
+                    iconCls: 'x-fa fa-users',
                     text: 'Users'
                 },'->',
                 {
                     xtype: 'button',
                     itemId: 'logoutBtn',
+                    iconCls: 'x-fa fa-sign-out',
                     text: 'Logout'
                 }
             ]

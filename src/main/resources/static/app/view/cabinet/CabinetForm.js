@@ -1,6 +1,10 @@
 Ext.define('Docs.view.cabinet.CabinetForm',{
     extend: 'Ext.form.Panel',
     alias: 'widget.cabinet-form',
+    reference: 'cabinetForm',
+    viewModel: {
+        type: 'cabinet'
+    },
     layout: {
         type: 'anchor'
     },
@@ -16,7 +20,9 @@ Ext.define('Docs.view.cabinet.CabinetForm',{
                 {
                     xtype: 'numberfield',
                     name: 'cabinetId',
-                    fieldLabel: 'Cabinet Number'
+                    fieldLabel: 'Cabinet Number',
+                    bind: '{current.cabinet.cabinetId}',
+                    editable: false
                 },
                 {
                     xtype: 'combobox',
@@ -28,7 +34,8 @@ Ext.define('Docs.view.cabinet.CabinetForm',{
                     // valueField: 'userId',
                     listConfig: {
                         minWidth: 300
-                    }
+                    },
+                    bind: '{current.cabinet.cabinetType}'
                     // ,tpl: Ext.create('Ext.XTemplate','<tpl for=".">',
                     //     '<div class="x-boundlist-item"><b>{cabinetType}</b> </div>','</tpl>'),
                     // displayTpl: Ext.create('Ext.XTemplate','<tpl for=".">', '{cabinetType}', '</tpl>')
@@ -44,19 +51,27 @@ Ext.define('Docs.view.cabinet.CabinetForm',{
                         xtype: 'button',
                         iconCls: 'x-fa fa-remove',
                         itemId: 'deleteBtn',
-                        disabled: true,
+                        bind: {
+                            disabled: '{!cabinetGrid.selection}'
+                        },
                         text: 'Delete'
                     },{
                         xtype: 'button',
                         itemId: 'addRowBtn',
                         iconCls: 'x-fa fa-plus',
-                        disabled: true,
-                        text: 'Add Row'
+                        bind: {
+                            disabled: '{!cabinetGrid.selection}'
+                        },
+                        handler: 'onAddRow',
+                        text: 'Add Row',
+                        formBind: true
                     },{
                         xtype: 'button',
                         iconCls: 'x-fa fa-save',
                         itemId: 'saveBtn',
-                        text: 'Save'
+                        handler: 'onSaveCabinet',
+                        text: 'Save',
+                        formBind: true
                     }]
                 }
             ]

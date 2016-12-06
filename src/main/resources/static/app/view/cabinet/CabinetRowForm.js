@@ -4,6 +4,7 @@ Ext.define('Docs.view.cabinet.CabinetRowForm',{
     layout: {
         type: 'anchor'
     },
+
     items: [
         {
             xtype: 'fieldset',
@@ -14,8 +15,14 @@ Ext.define('Docs.view.cabinet.CabinetRowForm',{
             title: 'Shelf Row Entry',
             items: [
                 {
+                    xtype: 'hiddenfield',
+                    bind: '{current.row.cabinetId}',
+                    name: 'cabinetId'
+                },
+                {
                     xtype: 'numberfield',
                     fieldLabel: 'Row Number',
+                    bind: '{current.row.rowNumber}',
                     name: 'rowNumber'
                 },
                 {
@@ -27,20 +34,23 @@ Ext.define('Docs.view.cabinet.CabinetRowForm',{
                     },
                     items: [{
                         xtype: 'button',
-                        iconCls: 'delete',
+                        iconCls: 'x-fa fa-remove',
                         itemId: 'deleteBtn',
                         disabled: true,
                         text: 'Delete'
                     },{
                         xtype: 'button',
                         itemId: 'addClientBtn',
+                        iconCls: 'x-fa fa-plus',
                         disabled: true,
-                        text: 'Add Client'
+                        text: 'Add Client',
+                        handler: 'onAddClient'
                     },{
                         xtype: 'button',
-                        iconCls: 'save',
+                        iconCls: 'x-fa fa-save',
                         itemId: 'saveBtn',
-                        text: 'Save'
+                        text: 'Save',
+                        handler: 'onSaveRow'
                     }]
                 }
             ]

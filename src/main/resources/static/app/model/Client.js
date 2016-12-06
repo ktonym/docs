@@ -7,6 +7,7 @@ Ext.define('Docs.model.Client', {
         { name: 'tel', type: 'string' },
         { name: 'pin', type: 'string' },
         { name: 'cabinetId', type: 'int'},
+        { name: 'rowNumber', type: 'int'},
         { name: 'cabinet', type: 'string', persist: false, 
             convert: function(v,rec){
                 var data = rec.data;

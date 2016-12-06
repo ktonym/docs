@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class Cabinet extends AbstractEntity implements EntityItem<Long> {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long cabinetId;
     @Enumerated(value = EnumType.STRING)
     private CabinetType cabinetType;

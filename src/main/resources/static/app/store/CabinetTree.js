@@ -1,14 +1,14 @@
 Ext.define('Docs.store.CabinetTree',{
     extend: 'Ext.data.TreeStore',
     storeId: 'cabinetTreeStore',
-    // proxy: {
-    //     type: 'ajax',
-    //     url: 'cabinet/treenode.json'
-    // },
+    proxy: {
+        type: 'ajax',
+        url: 'cabinet/tree.json'
+    }
 
     //TODO construct a tree structure to represent a cabinet tree
 
-    data: { cabinets: [
+    /*data: { cabinets: [
         { cabinetId : 1, cabinetType : "OPEN", text: '1',
             cabinetRows: [
                 { rowNumber: 1, text: 'Row 1',
@@ -25,7 +25,7 @@ Ext.define('Docs.store.CabinetTree',{
                 },
                 { rowNumber: 3},
                 { rowNumber: 4}
-            ] 
+            ]
         },
         { cabinetId : 2, text: '2', cabinetType : "CLOSED",
             cabinetRows: [{rowNumber: 1,text: 'Row 1'},{rowNumber: 2, text: 'Row 2'},{rowNumber: 3, text: 'Row 3'},{rowNumber: 4, text: 'Row 4'}] },
@@ -41,5 +41,5 @@ Ext.define('Docs.store.CabinetTree',{
             type: 'json',
             rootProperty: 'cabinets'
         }
-    }
+    }*/
 });

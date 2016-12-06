@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 /**
  * Created by user on 20-Nov-16.
@@ -30,13 +31,24 @@ public class ClientHandler extends AbstractHandler {
 
         JsonObject jsonObject = parseJsonObject(jsonData);
         Long cabinetId = ((JsonNumber) jsonObject.get("cabinetId")).longValue();
-        Long clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
+       // Long clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
         String clientName = jsonObject.getString("clientName");
         String tel = jsonObject.getString("tel");
         String pin = jsonObject.getString("pin");
         Long rowNo = ((JsonNumber) jsonObject.get("rowNo")).longValue();
 
-        Result<Client> ar = clientService.store(clientId,clientName,cabinetId,rowNo,tel,pin,"AKipkoech");
+        Long clientId;
+        Optional<Long> clientIdOpt;
+
+        try{
+            clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
+            clientIdOpt = Optional.of(cabinetId);
+        } catch (NullPointerException e){
+            clientIdOpt = Optional.empty();
+        }
+
+
+        Result<Client> ar = clientService.store(clientIdOpt,clientName,cabinetId,rowNo,tel,pin,"AKipkoech");
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
         } else {

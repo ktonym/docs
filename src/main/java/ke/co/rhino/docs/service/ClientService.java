@@ -11,8 +11,10 @@ import ke.co.rhino.docs.vo.ResultFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -32,7 +34,8 @@ public class ClientService implements IClientService {
     private CabinetRowRepo cabinetRowRepo;
 
     @Override
-    public Result<Client> store(Long clientId, String clientName, Long cabinetId, Long rowNo, String tel, String pin, String actionUsername) {
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public Result<Client> store(Optional<Long> clientIdOpt, String clientName, Long cabinetId, Long rowNo, String tel, String pin, String actionUsername) {
 
         if (cabinetId==null||cabinetId<1){
             return ResultFactory.getFailResult("Invalid cabinet ID provided.");
@@ -49,13 +52,13 @@ public class ClientService implements IClientService {
             return ResultFactory.getFailResult("Invalid row number provided. Cannot ADD/MODIFY a client.");
         }
 
-        CabinetRow row = cabinetRowRepo.findByCabinetAndRowNo(cabinet,rowNo);
+        CabinetRow row = cabinetRowRepo.findByCabinetAndRowNumber(cabinet,rowNo);
 
         Client.ClientBuilder builder = new Client.ClientBuilder(clientName);
 
         Optional<Client> clientNameOpt = repo.findByClientName(clientName); // query by name
         Optional<Client> clientByPinOpt = repo.findByPin(pin); // query by PIN
-        if(clientId==null){ //we're creating a new client
+        if(!clientIdOpt.isPresent()){ //we're creating a new client
             //builder.cabinetRow(row);
 
             if(clientNameOpt.isPresent()){
@@ -66,6 +69,7 @@ public class ClientService implements IClientService {
                 return ResultFactory.getFailResult("A client with a similar PIN exists in the system.");
             }
         } else { // we're updating a client
+            Long clientId = clientIdOpt.get();
             Optional<Client> clientOpt = repo.getOne(clientId);
 
 
@@ -102,17 +106,30 @@ public class ClientService implements IClientService {
     }
 
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public Result<Client> remove(Long clientId, String actionUsername) {
         return null;
     }
 
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Result<Page<Client>> findAll(int page, int size, String actionUsername) {
         return null;
     }
 
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Result<Page<Client>> findByCabinet(Long cabinetId, int page, int size, String actionUsername) {
         return null;
     }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public Result<List<Client>> findByRow(CabinetRow row){
+
+        List<Client> clients = repo.findByCabinetRow(row);
+
+        return ResultFactory.getSuccessResult(clients);
+    }
+
 }

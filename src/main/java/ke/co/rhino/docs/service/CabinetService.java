@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -29,7 +30,7 @@ public class CabinetService implements ICabinetService {
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<Cabinet> store(Long cabinetId, CabinetType cabinetType, /*Integer shelfNumber,*/ String actionUsername) {
+    public Result<Cabinet> store(Optional<Long> cabinetIdOpt, CabinetType cabinetType, /*Integer shelfNumber,*/ String actionUsername) {
 
         Cabinet.CabinetBuilder builder = new Cabinet.CabinetBuilder();
 
@@ -41,11 +42,8 @@ public class CabinetService implements ICabinetService {
 //            return ResultFactory.getFailResult("Please specify a valid non-empty shelf number. Creation/update failed.");
 //        }
 
-        if(cabinetId==null){
-
-
-        } else {
-
+        if(cabinetIdOpt.isPresent()){
+            Long cabinetId = cabinetIdOpt.get();
             Optional<Cabinet> cabinetOpt=repo.getOne(cabinetId);
             if(cabinetOpt.isPresent()) {
                 builder.cabinetId(cabinetId);
@@ -61,6 +59,7 @@ public class CabinetService implements ICabinetService {
     }
 
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public Result<Cabinet> remove(Long cabinetId, String actionUsername) {
 
         if(cabinetId==null){
@@ -77,11 +76,30 @@ public class CabinetService implements ICabinetService {
     }
 
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Result<Page<Cabinet>> findAll(int page,int size,String actionUsername) {
 
         PageRequest request = new PageRequest(page-1,size);
         Page<Cabinet> cabinetPage = repo.findAll(request);
 
         return ResultFactory.getSuccessResult(cabinetPage);
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public Result<List<Cabinet>> findAll() {
+
+        List<Cabinet> cabinets = repo.getAll();
+
+        return ResultFactory.getSuccessResult(cabinets);
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public Result<Cabinet> find(Long cabinetId) {
+
+        Cabinet cab = repo.findOne(cabinetId);
+        return ResultFactory.getSuccessResult(cab);
+
     }
 }

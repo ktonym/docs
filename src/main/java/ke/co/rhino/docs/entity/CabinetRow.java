@@ -27,7 +27,7 @@ public class CabinetRow extends AbstractEntity implements EntityItem<CabinetRowI
     public CabinetRow(CabinetRowBuilder cabinetRowBuilder) {
         this.rowNumber = cabinetRowBuilder.rowNumber;
         this.cabinet = cabinetRowBuilder.cabinet;
-        clients.addAll((cabinetRowBuilder.clients).stream().collect(Collectors.toSet()));
+       // clients.addAll((cabinetRowBuilder.clients).stream().collect(Collectors.toSet()));
     }
 
     public static class CabinetRowBuilder{

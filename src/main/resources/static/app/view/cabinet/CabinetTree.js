@@ -1,9 +1,12 @@
 Ext.define('Docs.view.cabinet.CabinetTree',{
     extend: 'Ext.tree.Panel',
     alias: 'widget.cabinet-tree',
-    title: 'Shelf -> Rows -> Clients',
-    // requires: ['Docs.store.CabinetTree'],
-    store: Ext.data.StoreManager.lookup('cabinetTreeStore'),
+    // reference: 'cabTree',
+    title: 'Document manager',
+    requires: ['Docs.store.CabinetTree'],
+    bind: {
+        store: '{cabinetTree}'
+    },
     lines: true,
     // rootVisible: false,
     hideHeaders: true,
@@ -23,6 +26,12 @@ Ext.define('Docs.view.cabinet.CabinetTree',{
     columns: [{
         xtype: 'treecolumn',
         dataIndex: 'text',
-        flex: 1
-    }]
+        flex: 1,
+        align: 'left'
+    }],
+    listeners: {
+        itemclick : 'onSelectTreeItem',
+        itemcontextmenu: 'onRightClick',
+        activate: 'doAfterActivate'
+    }
 });

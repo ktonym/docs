@@ -10,6 +10,9 @@ public class CabinetRowId implements Serializable {
     Long rowNumber;
     Cabinet cabinet;
 
+    public CabinetRowId() {
+    }
+
     public CabinetRowId(Long rowNumber, Cabinet cabinet) {
         this.rowNumber = rowNumber;
         this.cabinet = cabinet;

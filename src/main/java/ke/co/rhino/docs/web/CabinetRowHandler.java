@@ -63,12 +63,29 @@ public class CabinetRowHandler extends AbstractHandler{
 
     @RequestMapping(value = "/findAll", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseBody
-    public String findAll(HttpServletRequest request){
+    public String findAll(@RequestParam(value = "cabinetId") String cabinetIdStr, HttpServletRequest request){
 
-        int page = Integer.valueOf(request.getParameter("page"));
-        int size = Integer.valueOf(request.getParameter("limit"));
+        int page = request.getParameter("page") == null ? 1 : Integer.valueOf(request.getParameter("page"));
+        int size = request.getParameter("limit") == null ? 10 : Integer.valueOf(request.getParameter("limit"));
+        Long cabinetId = Long.valueOf(cabinetIdStr);
         String actionUsername = "akipkoech";
-        Result<Page<CabinetRow>> ar =  cabinetRowService.findAll(page,size,actionUsername);
+        Result<Page<CabinetRow>> ar =  cabinetRowService.findAll(cabinetId,page,size,actionUsername);
+
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
+
+    }
+
+    @RequestMapping(value = "/findZote", method = RequestMethod.GET, produces = {"application/json"})
+    @ResponseBody
+    public String findZote(HttpServletRequest request){
+        int page = request.getParameter("page") == null ? 1 : Integer.valueOf(request.getParameter("page"));
+        int size = request.getParameter("limit") == null ? 1000 : Integer.valueOf(request.getParameter("limit"));
+        String actionUsername = "akipkoech";
+        Result<Page<CabinetRow>> ar = cabinetRowService.findZote(page,size,actionUsername);
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());

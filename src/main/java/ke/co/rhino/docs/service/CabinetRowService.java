@@ -14,7 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import sun.security.x509.RFC822Name;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -51,6 +53,11 @@ public class CabinetRowService implements ICabinetRowService {
                 CabinetRow.CabinetRowBuilder builder = new CabinetRow.CabinetRowBuilder(rowNumber)
                         .cabinet(cabinetOpt.get());
                 row = builder.build();
+
+                System.out.println("---- Row info ----");
+                System.out.println("Row number: ".concat(row.getRowNumber().toString()));
+                System.out.println("Cabinet number: ".concat(cabinetOpt.get().getId().toString()));
+
                 repo.save(row);
                 return ResultFactory.getSuccessResult(row);
             }
@@ -62,10 +69,18 @@ public class CabinetRowService implements ICabinetRowService {
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public Result<Page<CabinetRow>> findAll(int page, int size, String actionUsername) {
+    public Result<Page<CabinetRow>> findAll(Long cabinetId,int page, int size, String actionUsername) {
 
+        if(cabinetId==null||cabinetId<1){
+            ResultFactory.getFailResult("Invalid cabinet ID supplied.");
+        }
+        Optional<Cabinet> cabinetOpt = cabinetRepo.getOne(cabinetId);
+        if(!cabinetOpt.isPresent()){
+            return ResultFactory.getFailResult("No cabinet with ID ["+cabinetId+"] was found.");
+        }
+        Cabinet cabinet = cabinetOpt.get();
         PageRequest request = new PageRequest(page-1,size);
-        Page<CabinetRow> cabinetRowPage = repo.findAll(request);
+        Page<CabinetRow> cabinetRowPage = repo.findByCabinet(cabinet,request);
 
         return ResultFactory.getSuccessResult(cabinetRowPage);
     }
@@ -101,4 +116,33 @@ public class CabinetRowService implements ICabinetRowService {
             return ResultFactory.getFailResult("The row number you specified does not exist on the cabinet or shelf.");
         }
     }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public Result<List<CabinetRow>> findByCabinet(Cabinet cab) {
+
+        List<CabinetRow> list = repo.findByCabinet(cab);
+
+        return ResultFactory.getSuccessResult(list);
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public Result<CabinetRow> find(CabinetRowId rowId){
+
+        CabinetRow row = repo.findOne(rowId);
+
+        return ResultFactory.getSuccessResult(row);
+    }
+
+    @Override
+    public Result<Page<CabinetRow>> findZote(int page, int size, String actionUsername) {
+
+        PageRequest request = new PageRequest(page-1,size);
+        Page<CabinetRow> cabinetRowPage = repo.findAll(request);
+
+        return ResultFactory.getSuccessResult(cabinetRowPage);
+
+    }
+
 }
