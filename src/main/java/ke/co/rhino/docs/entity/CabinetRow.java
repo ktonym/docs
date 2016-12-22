@@ -10,13 +10,16 @@ import java.util.stream.Collectors;
  * Created by akipkoech on 22/07/2016.
  */
 @Entity
-@IdClass(CabinetRowId.class)
-public class CabinetRow extends AbstractEntity implements EntityItem<CabinetRowId>{
+@Table(uniqueConstraints ={@UniqueConstraint(columnNames = {"ROWNUMBER","CABINET"})})
+public class CabinetRow extends AbstractEntity implements EntityItem<Long>{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long cabinetRowId;
+    @Column(name = "ROWNUMBER")
     private Long rowNumber;
-    @Id
     @ManyToOne
+    @JoinColumn(name = "CABINET")
     private Cabinet cabinet;
     @OneToMany(mappedBy = "cabinetRow")
     private Set<Client> clients;
@@ -25,6 +28,7 @@ public class CabinetRow extends AbstractEntity implements EntityItem<CabinetRowI
     }
 
     public CabinetRow(CabinetRowBuilder cabinetRowBuilder) {
+        this.cabinetRowId = cabinetRowBuilder.rowId;
         this.rowNumber = cabinetRowBuilder.rowNumber;
         this.cabinet = cabinetRowBuilder.cabinet;
        // clients.addAll((cabinetRowBuilder.clients).stream().collect(Collectors.toSet()));
@@ -32,16 +36,26 @@ public class CabinetRow extends AbstractEntity implements EntityItem<CabinetRowI
 
     public static class CabinetRowBuilder{
 
-        private final Long rowNumber;
+        private Long rowId;
+        private Long rowNumber;
         private Cabinet cabinet;
         private Set<Client> clients;
 
-        public CabinetRowBuilder(Long rowNumber) {
-            this.rowNumber = rowNumber;
+        public CabinetRowBuilder() {
         }
 
         public CabinetRowBuilder cabinet(Cabinet cabinet){
             this.cabinet = cabinet;
+            return this;
+        }
+
+        public CabinetRowBuilder rowId(Long rowId){
+            this.rowId = rowId;
+            return this;
+        }
+
+        public CabinetRowBuilder rowNumber(Long rowNumber){
+            this.rowNumber = rowNumber;
             return this;
         }
 
@@ -64,18 +78,23 @@ public class CabinetRow extends AbstractEntity implements EntityItem<CabinetRowI
         return cabinet;
     }
 
+    public Long getCabinetRowId() {
+        return cabinetRowId;
+    }
+
     public Set<Client> getClients() {
         return clients;
     }
 
     @Override
-    public CabinetRowId getId() {
-        return new CabinetRowId(rowNumber,cabinet);
+    public Long getId() {
+        return cabinetRowId;
     }
 
     @Override
     public void addJson(JsonObjectBuilder builder) {
-        builder.add("rowNumber",rowNumber);
+        builder.add("rowNumber",rowNumber)
+                .add("rowId",cabinetRowId);
         cabinet.addJson(builder);
     }
 }

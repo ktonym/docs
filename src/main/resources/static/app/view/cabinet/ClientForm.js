@@ -1,35 +1,40 @@
 Ext.define('Docs.view.cabinet.ClientForm',{
     extend: 'Ext.form.Panel',
     alias: 'widget.client-form',
-    layout: 'anchor',
-    bodyPadding: 10,
-    border: false,
-    autoScroll: true,
+    layout: {
+        type: 'anchor'
+    },
     items: [
         {
             xtype: 'fieldset',
             padding: 10,
             fieldDefaults: {
-                anchor: '100%',
-                xtype: 'textfield'
+                anchor: '100%'
             },
             title: 'Client Entry',
             items: [
                 {
                     xtype: 'hiddenfield',
-                    name: 'clientId'
+                    name: 'clientId',
+                    bind: '{current.client.clientId}'
                 },
                 {
+                    xtype: 'textfield',
                     fieldLabel: 'Client Name',
-                    name: 'clientName'
+                    name: 'clientName',
+                    bind: '{current.client.clientName}'
                 },
                 {
+                    xtype: 'textfield',
                     fieldLabel: 'PIN',
-                    name: 'pin'
+                    name: 'pin',
+                    bind: '{current.client.pin}'
                 },
                 {
+                    xtype: 'textfield',
                     fieldLabel: 'Tel. No',
-                    name: 'tel'
+                    name: 'tel',
+                    bind: '{current.client.tel}'
                 },
                 {
                     xtype: 'toolbar',

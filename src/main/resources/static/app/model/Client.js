@@ -1,9 +1,9 @@
 Ext.define('Docs.model.Client', {
     extend: 'Docs.model.Base',
-    
+    idProperty: 'clientId',
     fields: [
-        { name: 'id', type: 'number' },
-        { name: 'name', type: 'string' },
+        { name: 'clientId', type: 'number' },
+        { name: 'clientName', type: 'string' },
         { name: 'tel', type: 'string' },
         { name: 'pin', type: 'string' },
         { name: 'cabinetId', type: 'int'},

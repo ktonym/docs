@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import sun.security.x509.RFC822Name;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,9 +36,9 @@ public class ClientService implements IClientService {
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<Client> store(Optional<Long> clientIdOpt, String clientName, Long cabinetId, Long rowNo, String tel, String pin, String actionUsername) {
+    public Result<Client> store(Optional<Long> clientIdOpt, String clientName, Long rowId, String tel, String pin, String actionUsername) {
 
-        if (cabinetId==null||cabinetId<1){
+        /*if (cabinetId==null||cabinetId<1){
             return ResultFactory.getFailResult("Invalid cabinet ID provided.");
         }
 
@@ -50,9 +51,16 @@ public class ClientService implements IClientService {
 
         if(rowNo==null||rowNo<1){
             return ResultFactory.getFailResult("Invalid row number provided. Cannot ADD/MODIFY a client.");
+        }*/
+        if(rowId==null||rowId<1){
+            return ResultFactory.getFailResult("Invalid row ID provided. Cannot ADD/MODIFY a client.");
         }
 
-        CabinetRow row = cabinetRowRepo.findByCabinetAndRowNumber(cabinet,rowNo);
+        Optional<CabinetRow> rowOpt = cabinetRowRepo.getOne(rowId);
+
+        if(!rowOpt.isPresent()){
+            return ResultFactory.getFailResult("No row with provided ID exists in the system. Cannot ADD/MODIFY a client.");
+        }
 
         Client.ClientBuilder builder = new Client.ClientBuilder(clientName);
 
@@ -98,7 +106,7 @@ public class ClientService implements IClientService {
             builder.tel(tel);
         }
 
-        Client client = builder.cabinetRow(row).build();
+        Client client = builder.cabinetRow(rowOpt.get()).build();
 
         repo.save(client);
 

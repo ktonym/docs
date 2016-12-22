@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public interface IClientService {
 
-    Result<Client> store(Optional<Long> clientId, String clientName, Long cabinetId, Long rowNo,
+    Result<Client> store(Optional<Long> clientId, String clientName, Long rowId,
                          String tel, String pin, String actionUsername);
 
     Result<Client> remove(Long clientId,String actionUsername);

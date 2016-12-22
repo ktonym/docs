@@ -53,7 +53,7 @@ Ext.define('Docs.view.cabinet.CabinetController',{
                 Docs.util.Util.showErrorMsg(operation.responseText);
             },
             success: function (record, operation) {
-                Docs.util.Util.showToast('Shelf successfully saved.')
+                Docs.util.Util.showToast('Shelf successfully saved.');
                 me.doRefreshTree();
             }
         });
@@ -76,6 +76,10 @@ Ext.define('Docs.view.cabinet.CabinetController',{
     onSaveRow: function () {
         var me = this,
             vw = me.getView(),
+            panel = vw.lookupReference('cabinetPanel'),
+            form = panel.down('cabinet-row-form'),
+            delBtn = form.down('#deleteBtn'),
+            addClientBtn = form.down('#addClientBtn'),
             vm = me.getViewModel(),
             row = vm.get('current.row'),
             cabinetId = vm.get('current.cabinet.cabinetId');
@@ -86,6 +90,8 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             },
             success: function (record, operation) {
                 Docs.util.Util.showToast('Row successfully saved.');
+                delBtn.enable();
+                addClientBtn.enable();
                 // var nodeId = 'S_' + cabinetId,
                 //     tree = vw.lookupReference('cabinetPanel').up().down('cabinet-tree'),
                 //     parentNode = tree.getNodeById(nodeId);
@@ -94,22 +100,44 @@ Ext.define('Docs.view.cabinet.CabinetController',{
                 //     expanded: false,
                 //     text: 'Row x'
                 // });
-                console.log(record);
                 me.doRefreshTree();
             }
         });
     },
-    onAddClient: function (node) {
+    onAddClient: function (rowNode) {
+
         var me = this,
             vm = me.getViewModel(),
-            row = vm.get('current.row'),
-            rec = Ext.create('Docs.model.Client',{
-                rowNumber: null,
-                cabinetId: null
-            });
+            vw = me.getView(),
+            panel = vw.lookupReference('cabinetPanel'),
+            rowId = vm.get('current.row.rowId'),
+            form = panel.down('client-form'),
+            rec;
+        rec = Ext.create('Docs.model.Client',{
+            rowId : rowId ? rowId : Ext.Number.from(rowNode.getId().split('_')[1])
+        });
+
+        vm.set('current.client',rec);
+        panel.getLayout().setActiveItem(form);
+
     },
     onSaveClient: function () {
-
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            client = vm.get('current.client');
+            //cabinetId = vm.get('current.cabinet.cabinetId');
+        //store = vm.get('cabinetTree');
+        client.save({
+            failure: function (record, operation) {
+                Docs.util.Util.showErrorMsg(operation.responseText);
+            },
+            success: function (record, operation) {
+                Docs.util.Util.showToast('Client successfully saved.');
+                console.log(record);
+                me.doRefreshTree();
+            }
+        });
     },
     onAddCategory: function(record){
 
@@ -140,11 +168,8 @@ Ext.define('Docs.view.cabinet.CabinetController',{
                 panel.getLayout().setActiveItem(form);
             }
         } else if (recIdSplit[0]==='R') {
-            var rowId = recIdSplit[1], //The id is not a number!
-                rec = vm.get('allCabinetRows').findRecord('cabinetRowId', rowId),
-                // the reason it won't work is because cabinetRowId returned by this route /cabinetRow/findZote
-                // is not properly formatted for this tree!
-                // need to change tact.
+            var rowId = Ext.Number.from(recIdSplit[1]),
+                rec = vm.get('allCabinetRows').findRecord('rowId', rowId),
                 form = panel.down('cabinet-row-form');
             if (!Ext.isEmpty(rec)) {
                 vm.set('current.row', rec);

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 /**
  * Created by user on 20-Nov-16.
@@ -33,8 +34,17 @@ public class CabinetRowHandler extends AbstractHandler{
 
         Long rowNumber = ((JsonNumber) jsonObject.get("rowNumber")).longValue();
         Long cabinetId = ((JsonNumber) jsonObject.get("cabinetId")).longValue();
+        Long rowId;
+        Optional<Long> rowIdOpt;
 
-        Result<CabinetRow> ar = cabinetRowService.store(rowNumber,cabinetId,"AKipkoech");
+        try{
+            rowId = ((JsonNumber) jsonObject.get("clientId")).longValue();
+            rowIdOpt = Optional.of(rowId);
+        } catch (NullPointerException e){
+            rowIdOpt = Optional.empty();
+        }
+
+        Result<CabinetRow> ar = cabinetRowService.store(rowIdOpt,rowNumber,cabinetId,"AKipkoech");
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
@@ -49,9 +59,9 @@ public class CabinetRowHandler extends AbstractHandler{
     public String remove(@RequestParam(value = "data") String jsonData){
 
         JsonObject jsonObject = parseJsonObject(jsonData);
-        Long cabinetId = ((JsonNumber) jsonObject.get("cabinetRowId")).longValue();
-        Long rowNumber = ((JsonNumber) jsonObject.get("rowNumber")).longValue();
-        Result<CabinetRow> ar = cabinetRowService.remove(rowNumber, cabinetId, "akipkoech");
+        Long rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
+        //Long rowNumber = ((JsonNumber) jsonObject.get("rowNumber")).longValue();
+        Result<CabinetRow> ar = cabinetRowService.remove(rowId, "akipkoech");
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());

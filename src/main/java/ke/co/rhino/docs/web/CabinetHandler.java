@@ -118,9 +118,10 @@ public class CabinetHandler extends AbstractHandler {
         if(obj instanceof Cabinet){
             id = "S_" + obj.getId();
         }else if (obj instanceof CabinetRow){
-            StringBuilder builder = new StringBuilder("R_").append(((CabinetRow) obj).getCabinet().getCabinetId())
+            /*StringBuilder builder = new StringBuilder("R_").append(((CabinetRow) obj).getCabinet().getCabinetId())
                     .append(":").append(((CabinetRow) obj).getRowNumber().toString()); // + obj.getId();
-            id = builder.toString();
+            id = builder.toString();*/
+            id = "R_" + obj.getId();
         }else if (obj instanceof Client){
             id = "C_" + obj.getId();
         }
@@ -186,11 +187,11 @@ public class CabinetHandler extends AbstractHandler {
 
         } else if(node.startsWith("R")){
             String[] idSplit = node.split("_");
-            String[] rowIdSplit = idSplit[1].split(":");
+            /*String[] rowIdSplit = idSplit[1].split(":");
             Long cabinetId = Long.valueOf(rowIdSplit[0].toString());
             Long rowNum = Long.valueOf(rowIdSplit[1].toString());
-            Cabinet cab = service.find(cabinetId).getData();
-            CabinetRowId rowId = new CabinetRowId(rowNum,cab);
+            Cabinet cab = service.find(cabinetId).getData();*/
+            Long rowId = Long.parseLong(idSplit[1]);
             CabinetRow row = cabinetRowService.find(rowId).getData();
             List<Client> clients = clientService.findByRow(row).getData();
 

@@ -4,7 +4,6 @@ Ext.define('Docs.view.cabinet.CabinetRowForm',{
     layout: {
         type: 'anchor'
     },
-
     items: [
         {
             xtype: 'fieldset',
@@ -17,6 +16,11 @@ Ext.define('Docs.view.cabinet.CabinetRowForm',{
                 {
                     xtype: 'hiddenfield',
                     bind: '{current.row.cabinetId}',
+                    name: 'cabinetId'
+                },
+                {
+                    xtype: 'hiddenfield',
+                    bind: '{current.row.rowId}',
                     name: 'cabinetId'
                 },
                 {

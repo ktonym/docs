@@ -14,11 +14,11 @@ import java.util.Set;
 /**
  * Created by akipkoech on 22/07/2016.
  */
-public interface CabinetRowRepo extends PagingAndSortingRepository<CabinetRow, CabinetRowId> {
+public interface CabinetRowRepo extends PagingAndSortingRepository<CabinetRow, Long> {
 
-    Optional<CabinetRow> getOne(CabinetRowId id);
+    Optional<CabinetRow> getOne(Long rowId);
 
-    CabinetRow findOne(CabinetRowId id);
+    CabinetRow findOne(Long rowId);
 
     Page<CabinetRow> findByCabinet(Cabinet cabinet, Pageable pageable);
 
@@ -26,6 +26,6 @@ public interface CabinetRowRepo extends PagingAndSortingRepository<CabinetRow, C
 
     long countByCabinet(Cabinet cabinet);
 
-    CabinetRow findByCabinetAndRowNumber(Cabinet cabinet, Long rowNo);
+    Optional<CabinetRow> findByCabinetAndRowNumber(Cabinet cabinet, Long rowNo);
 
 }

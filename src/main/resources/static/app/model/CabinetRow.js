@@ -1,7 +1,8 @@
 Ext.define('Docs.model.CabinetRow', {
     extend: 'Docs.model.Base',
-
+    idProperty: 'rowId',
     fields: [
+        {name: 'rowId', type: 'int'},
         {name: 'rowNumber', type: 'int'},
         {name: 'cabinetId', type: 'int'},
         {

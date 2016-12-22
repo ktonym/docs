@@ -30,25 +30,25 @@ public class ClientHandler extends AbstractHandler {
     public String store(@RequestParam(value = "data")String jsonData,HttpServletRequest request){
 
         JsonObject jsonObject = parseJsonObject(jsonData);
-        Long cabinetId = ((JsonNumber) jsonObject.get("cabinetId")).longValue();
+        //Long cabinetId = ((JsonNumber) jsonObject.get("cabinetId")).longValue();
        // Long clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
         String clientName = jsonObject.getString("clientName");
         String tel = jsonObject.getString("tel");
         String pin = jsonObject.getString("pin");
-        Long rowNo = ((JsonNumber) jsonObject.get("rowNo")).longValue();
+        Long rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
 
         Long clientId;
         Optional<Long> clientIdOpt;
 
         try{
             clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
-            clientIdOpt = Optional.of(cabinetId);
+            clientIdOpt = Optional.of(clientId);
         } catch (NullPointerException e){
             clientIdOpt = Optional.empty();
         }
 
 
-        Result<Client> ar = clientService.store(clientIdOpt,clientName,cabinetId,rowNo,tel,pin,"AKipkoech");
+        Result<Client> ar = clientService.store(clientIdOpt,clientName,rowId,tel,pin,"AKipkoech");
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
         } else {

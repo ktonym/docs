@@ -7,21 +7,22 @@ import ke.co.rhino.docs.vo.Result;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by akipkoech on 10/08/2016.
  */
 public interface ICabinetRowService {
 
-    Result<CabinetRow> store(Long rowNumber,Long cabinetId,String actionUsername);
+    Result<CabinetRow> store(Optional<Long> cabinetRowId, Long rowNumber, Long cabinetId, String actionUsername);
 
     Result<Page<CabinetRow>> findAll(Long cabinetId,int page,int size,String actionUsername);
 
-    Result<CabinetRow> remove(Long rowNumber,Long cabinetId,String actionUsername);
+    Result<CabinetRow> remove(Long cabinetRowId,String actionUsername);
 
     Result<List<CabinetRow>> findByCabinet(Cabinet cab);
 
-    Result<CabinetRow> find(CabinetRowId rowId);
+    Result<CabinetRow> find(Long cabinetRowId);
 
     Result<Page<CabinetRow>> findZote(int page,int size,String actionUsername);
 }

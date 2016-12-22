@@ -35,7 +35,7 @@ public class CabinetRowService implements ICabinetRowService {
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<CabinetRow> store(Long rowNumber, Long cabinetId, String actionUsername) {
+    public Result<CabinetRow> store(Optional<Long> cabinetRowIdOpt, Long rowNumber, Long cabinetId, String actionUsername) {
 
         if(cabinetId == null || cabinetId < 1){
             return ResultFactory.getFailResult("Invalid cabinet ID specified. Kindly provide a valid, non-null ID.");
@@ -50,8 +50,30 @@ public class CabinetRowService implements ICabinetRowService {
             } else{
 
                 CabinetRow row;//identifying..
-                CabinetRow.CabinetRowBuilder builder = new CabinetRow.CabinetRowBuilder(rowNumber)
+                CabinetRow.CabinetRowBuilder builder = new CabinetRow.CabinetRowBuilder().rowNumber(rowNumber)
                         .cabinet(cabinetOpt.get());
+
+
+                /**
+                 * need to check that the cabinet,rowNum combination does not belong to another rowId
+                 */
+                Optional<CabinetRow> testRowOpt = repo.findByCabinetAndRowNumber(cabinetOpt.get(),rowNumber);
+
+                if(cabinetRowIdOpt.isPresent()){ // we're modifying a row
+                    System.out.println("---CabinetRowID is present----");
+                    if(testRowOpt.isPresent() && cabinetRowIdOpt.get()!=testRowOpt.get().getId()){
+                        return ResultFactory.getFailResult("The row you are updating does not match the ID supplied. Cannot update");
+                    }
+                    builder.rowId(cabinetRowIdOpt.get());
+                } else { // we're creating a new row
+                         // so the cabinet,rowNum combo should not exist
+
+                    if(testRowOpt.isPresent()){
+                        return ResultFactory.getFailResult("The [cabinet,row] combination already exists. Cannot ADD row.");
+                    }
+
+                }
+
                 row = builder.build();
 
                 System.out.println("---- Row info ----");
@@ -87,19 +109,20 @@ public class CabinetRowService implements ICabinetRowService {
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<CabinetRow> remove(Long rowNumber, Long cabinetId,String actionUsername) {
+    public Result<CabinetRow> remove(Long cabinetRowId,String actionUsername) {
 
-        if(rowNumber==null||rowNumber<1){
+        if(cabinetRowId==null||cabinetRowId<1){
             return ResultFactory.getFailResult("Invalid row number specified. Kindly provide a valid, non-null number you wish to remove.");
         }
 
-        if(cabinetId==null||cabinetId<1){
+        /*if(cabinetId==null||cabinetId<1){
             return ResultFactory.getFailResult("Invalid cabinet ID specified. Kindly provide a valid, non-null cabinet.");
         }
 
         Cabinet cab = cabinetRepo.findOne(cabinetId);
 
-        CabinetRowId cabinetRowId = new CabinetRowId(rowNumber,cab);
+        //CabinetRowId cabinetRowId = new CabinetRowId(rowNumber,cab);
+        */
 
         Optional<CabinetRow> rowOpt = repo.getOne(cabinetRowId);
 
@@ -128,7 +151,7 @@ public class CabinetRowService implements ICabinetRowService {
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public Result<CabinetRow> find(CabinetRowId rowId){
+    public Result<CabinetRow> find(Long rowId){
 
         CabinetRow row = repo.findOne(rowId);
 
