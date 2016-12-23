@@ -28,7 +28,9 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             //grid = view.lookupReference('cabinetGrid'),
             form = panel.down('cabinet-form'),
             editor,
-            r = Ext.create('Docs.model.Cabinet',{});
+            r = Ext.create('Docs.model.Cabinet',{
+                id: null
+            });
         // if(grid){
         //     editor = grid.getPlugin('editing');
         //     editor.cancelEdit();
@@ -67,7 +69,8 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             form = panel.down('cabinet-row-form'),
             rec;
         rec = Ext.create('Docs.model.CabinetRow',{
-            cabinetId : cabId ? cabId : Ext.Number.from(cabNode.getId().split('_')[1])
+            cabinetId : cabId ? cabId : Ext.Number.from(cabNode.getId().split('_')[1]),
+            rowId: null
         });
 
         vm.set('current.row',rec);
@@ -100,6 +103,7 @@ Ext.define('Docs.view.cabinet.CabinetController',{
                 //     expanded: false,
                 //     text: 'Row x'
                 // });
+                vm.getStore('allCabinetRows').load();
                 me.doRefreshTree();
             }
         });
@@ -114,7 +118,8 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             form = panel.down('client-form'),
             rec;
         rec = Ext.create('Docs.model.Client',{
-            rowId : rowId ? rowId : Ext.Number.from(rowNode.getId().split('_')[1])
+            rowId : rowId ? rowId : Ext.Number.from(rowNode.getId().split('_')[1]),
+            clientId: null
         });
 
         vm.set('current.client',rec);
@@ -136,6 +141,7 @@ Ext.define('Docs.view.cabinet.CabinetController',{
                 Docs.util.Util.showToast('Client successfully saved.');
                 console.log(record);
                 me.doRefreshTree();
+                vm.getStore('clients').load();
             }
         });
     },
@@ -157,12 +163,11 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             panel = vw.lookupReference('cabinetPanel'),
             vm = me.getViewModel(),
             recIdSplit = record.getId().split('_');
-        // Docs.console(recIdSplit);
+        console.log(recIdSplit);
         if (recIdSplit[0]==='S') {
             var cabinetId = Ext.Number.from(recIdSplit[1]),
                 rec = vm.get('cabinets').findRecord('cabinetId',cabinetId),
                 form = panel.down('cabinet-form');
-
             if (!Ext.isEmpty(rec)) {
                 vm.set('current.cabinet',rec);
                 panel.getLayout().setActiveItem(form);
@@ -171,6 +176,8 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             var rowId = Ext.Number.from(recIdSplit[1]),
                 rec = vm.get('allCabinetRows').findRecord('rowId', rowId),
                 form = panel.down('cabinet-row-form');
+            console.log(rec);
+            debugger;
             if (!Ext.isEmpty(rec)) {
                 vm.set('current.row', rec);
                 panel.getLayout().setActiveItem(form);
@@ -179,6 +186,8 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             var clientId = Ext.Number.from(recIdSplit[1]),
                 rec = vm.get('clients').findRecord('clientId', clientId),
                 form = panel.down('client-form');
+            console.log(rec);
+            debugger;
             if (!Ext.isEmpty(rec)) {
                 vm.set('current.client', rec);
                 panel.getLayout().setActiveItem(form);
@@ -248,5 +257,6 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             vm = me.getViewModel(),
             treeStore = vm.getStore('cabinetTree');
         treeStore.load();
+        vm.getStore('allCabinetRows').load();
     }
 });

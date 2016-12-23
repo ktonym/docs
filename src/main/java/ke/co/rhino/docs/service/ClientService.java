@@ -36,7 +36,7 @@ public class ClientService implements IClientService {
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<Client> store(Optional<Long> clientIdOpt, String clientName, Long rowId, String tel, String pin, String actionUsername) {
+    public Result<Client> store(Optional<Long> clientIdOpt, String clientName, Long rowId, String tel, String email, String pin, String actionUsername) {
 
         /*if (cabinetId==null||cabinetId<1){
             return ResultFactory.getFailResult("Invalid cabinet ID provided.");
@@ -106,6 +106,10 @@ public class ClientService implements IClientService {
             builder.tel(tel);
         }
 
+        if(email!=null){
+            builder.email(email);
+        }
+
         Client client = builder.cabinetRow(rowOpt.get()).build();
 
         repo.save(client);
@@ -123,6 +127,13 @@ public class ClientService implements IClientService {
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Result<Page<Client>> findAll(int page, int size, String actionUsername) {
         return null;
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public Result<List<Client>> findEverything(String actionUsername) {
+        List<Client> clients = repo.getAll();
+        return ResultFactory.getSuccessResult(clients);
     }
 
     @Override

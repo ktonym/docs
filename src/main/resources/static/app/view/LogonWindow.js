@@ -30,7 +30,7 @@ Ext.define('Docs.view.LogonWindow',{
                     fieldLabel: 'Password',
                     inputType: 'password',
                     validateOnBlur: true
-                },{
+                }]/*,{
                     xtype: 'toolbar',
                     ui:'footer',
                     layout: {
@@ -43,10 +43,22 @@ Ext.define('Docs.view.LogonWindow',{
                         formBind: true,
                         handler: 'doLogin'
                     }]
-                }]
+                }]*/
             }
 
-        ]
+        ],
+        bbar: {
+            overflowHandler: 'menu',
+            items: [
+                '->',
+                {
+                    xtype: 'button',
+                    text: 'Logon',
+                    formBind: true,
+                    handler: 'doLogin'
+                }
+            ]
+        }
         
 },
     function(){

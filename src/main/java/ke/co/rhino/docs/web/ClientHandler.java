@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,6 +36,7 @@ public class ClientHandler extends AbstractHandler {
         String clientName = jsonObject.getString("clientName");
         String tel = jsonObject.getString("tel");
         String pin = jsonObject.getString("pin");
+        String email = jsonObject.getString("email");
         Long rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
 
         Long clientId;
@@ -45,16 +47,29 @@ public class ClientHandler extends AbstractHandler {
             clientIdOpt = Optional.of(clientId);
         } catch (NullPointerException e){
             clientIdOpt = Optional.empty();
+        } catch (Exception e){
+            clientIdOpt = Optional.empty();
         }
 
 
-        Result<Client> ar = clientService.store(clientIdOpt,clientName,rowId,tel,pin,"AKipkoech");
+        Result<Client> ar = clientService.store(clientIdOpt,clientName,rowId,tel,email,pin,"AKipkoech");
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
         } else {
             return getJsonErrorMsg(ar.getMsg());
         }
 
+    }
+
+    @RequestMapping(value = "/findAll",method = RequestMethod.GET,produces = {"application/json"})
+    @ResponseBody
+    public String findAll(HttpServletRequest request){
+        Result<List<Client>> ar = clientService.findEverything("AKipkoech");
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
     }
 
 }

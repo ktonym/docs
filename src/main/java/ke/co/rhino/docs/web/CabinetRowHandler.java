@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,9 +39,11 @@ public class CabinetRowHandler extends AbstractHandler{
         Optional<Long> rowIdOpt;
 
         try{
-            rowId = ((JsonNumber) jsonObject.get("clientId")).longValue();
+            rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
             rowIdOpt = Optional.of(rowId);
         } catch (NullPointerException e){
+            rowIdOpt = Optional.empty();
+        }catch (Exception e){
             rowIdOpt = Optional.empty();
         }
 
@@ -92,10 +95,10 @@ public class CabinetRowHandler extends AbstractHandler{
     @RequestMapping(value = "/findZote", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseBody
     public String findZote(HttpServletRequest request){
-        int page = request.getParameter("page") == null ? 1 : Integer.valueOf(request.getParameter("page"));
-        int size = request.getParameter("limit") == null ? 1000 : Integer.valueOf(request.getParameter("limit"));
+//        int page = request.getParameter("page") == null ? 1 : Integer.valueOf(request.getParameter("page"));
+//        int size = request.getParameter("limit") == null ? 1000 : Integer.valueOf(request.getParameter("limit"));
         String actionUsername = "akipkoech";
-        Result<Page<CabinetRow>> ar = cabinetRowService.findZote(page,size,actionUsername);
+        Result<List<CabinetRow>> ar = cabinetRowService.findZote(actionUsername);
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());

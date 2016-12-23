@@ -5,6 +5,7 @@ import ke.co.rhino.docs.entity.CabinetRow;
 import ke.co.rhino.docs.entity.CabinetRowId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
@@ -27,5 +28,8 @@ public interface CabinetRowRepo extends PagingAndSortingRepository<CabinetRow, L
     long countByCabinet(Cabinet cabinet);
 
     Optional<CabinetRow> findByCabinetAndRowNumber(Cabinet cabinet, Long rowNo);
+
+    @Query("SELECT r FROM CabinetRow r")
+    List<CabinetRow> findZote();
 
 }

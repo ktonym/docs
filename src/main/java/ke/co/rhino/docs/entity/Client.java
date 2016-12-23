@@ -16,6 +16,7 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
     private Long clientId;
     private String clientName;
     private String tel;
+    private String email;
     private String pin;
     @ManyToOne
     /*@JoinColumns({
@@ -33,15 +34,17 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
         this.clientId = clientBuilder.clientId;
         this.clientName = clientBuilder.clientName;
         this.tel = clientBuilder.tel;
+        this.email = clientBuilder.email;
         this.pin = clientBuilder.pin;
         this.cabinetRow = clientBuilder.cabinetRow;
-        this.categories.addAll(clientBuilder.categories.stream().collect(Collectors.toSet()));
+        //this.categories.addAll(clientBuilder.categories.stream().collect(Collectors.toSet()));
     }
 
     public static class ClientBuilder{
         private Long clientId;
         private final String clientName;
         private String tel;
+        private String email;
         private String pin;
         private CabinetRow cabinetRow;
         private Set<Category> categories;
@@ -79,6 +82,10 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
             return new Client(this);
         }
 
+        public ClientBuilder email(String email) {
+            this.email = email;
+            return this;
+        }
     }
 
     public Long getClientId() {
@@ -91,6 +98,10 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
 
     public String getTel() {
         return tel;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getPin() {
@@ -114,8 +125,9 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
     public void addJson(JsonObjectBuilder builder) {
         builder.add("clientId",clientId)
                 .add("clientName", clientName)
-                .add("tel",tel)
-                .add("pin",pin);
+                .add("tel",tel == null ? "" : tel)
+                .add("email",email == null ? "" : email)
+                .add("pin",pin == null ? "" : pin);
         cabinetRow.addJson(builder);
     }
 }

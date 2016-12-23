@@ -159,12 +159,12 @@ public class CabinetRowService implements ICabinetRowService {
     }
 
     @Override
-    public Result<Page<CabinetRow>> findZote(int page, int size, String actionUsername) {
+    public Result<List<CabinetRow>> findZote(String actionUsername) {
 
-        PageRequest request = new PageRequest(page-1,size);
-        Page<CabinetRow> cabinetRowPage = repo.findAll(request);
+        //PageRequest request = new PageRequest(page-1,size);
+        List<CabinetRow> cabinetRows = repo.findZote();
 
-        return ResultFactory.getSuccessResult(cabinetRowPage);
+        return ResultFactory.getSuccessResult(cabinetRows);
 
     }
 

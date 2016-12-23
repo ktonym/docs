@@ -225,9 +225,11 @@ public class CabinetHandler extends AbstractHandler {
         Optional<Long> cabinetIdOpt;
 
         try{
-            cabinetId = ((JsonNumber) jsonObject.get("cabinetId")).longValue();
+            cabinetId = ((JsonNumber) jsonObject.get("id")).longValue();
             cabinetIdOpt = Optional.of(cabinetId);
         } catch (NullPointerException e){
+            cabinetIdOpt = Optional.empty();
+        } catch (Exception e){
             cabinetIdOpt = Optional.empty();
         }
 

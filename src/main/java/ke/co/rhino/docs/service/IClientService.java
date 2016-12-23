@@ -14,11 +14,13 @@ import java.util.Optional;
 public interface IClientService {
 
     Result<Client> store(Optional<Long> clientId, String clientName, Long rowId,
-                         String tel, String pin, String actionUsername);
+                         String tel, String email, String pin, String actionUsername);
 
     Result<Client> remove(Long clientId,String actionUsername);
 
     Result<Page<Client>> findAll(int page,int size,String actionUsername);
+
+    Result<List<Client>> findEverything(String actionUsername);
 
     Result<Page<Client>> findByCabinet(Long cabinetId,int page,int size,String actionUsername);
 

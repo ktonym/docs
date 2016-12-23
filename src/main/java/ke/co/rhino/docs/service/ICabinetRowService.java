@@ -24,5 +24,5 @@ public interface ICabinetRowService {
 
     Result<CabinetRow> find(Long cabinetRowId);
 
-    Result<Page<CabinetRow>> findZote(int page,int size,String actionUsername);
+    Result<List<CabinetRow>> findZote(String actionUsername);
 }

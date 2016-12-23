@@ -37,31 +37,45 @@ Ext.define('Docs.view.cabinet.ClientForm',{
                     bind: '{current.client.tel}'
                 },
                 {
+                    xtype: 'textfield',
+                    fieldLabel: 'email',
+                    name: 'email',
+                    bind: '{current.client.email}'
+                }/*,
+                {
                     xtype: 'toolbar',
                     ui: 'footer',
                     layout: {
                         pack: 'end',
                         type: 'hbox'
                     },
-                    items: [{
-                        xtype: 'button',
-                        iconCls: 'delete',
-                        itemId: 'deleteBtn',
-                        disabled: true,
-                        text: 'Delete'
-                    },{
-                        xtype: 'button',
-                        itemId: 'addCategoryBtn',
-                        disabled: true,
-                        text: 'Add Category'
-                    },{
-                        xtype: 'button',
-                        iconCls: 'save',
-                        itemId: 'saveBtn',
-                        text: 'Save'
-                    }]
-                }
+
+                }*/
             ]
         }
-    ]
+    ],
+    bbar: {
+        overflowHandler: 'menu',
+        items: [{
+            xtype: 'button',
+            iconCls: 'x-fa fa-remove',
+            itemId: 'deleteBtn',
+            disabled: true,
+            text: 'Delete'
+        },{
+            xtype: 'button',
+            iconCls: 'x-fa fa-plus',
+            itemId: 'addCategoryBtn',
+            disabled: true,
+            text: 'Add Category'
+        },{
+            xtype: 'button',
+            iconCls: 'x-fa fa-save',
+            itemId: 'saveBtn',
+            text: 'Save',
+            handler: 'onSaveClient',
+            formBind: true
+        }]
+    }
+
 });
