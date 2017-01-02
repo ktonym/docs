@@ -9,6 +9,7 @@ Ext.define('Docs.view.MainHeader',{
     items: [
         {
             xtype: 'container',
+            iconCls: 'x-fa fa-file-o',
             width: 300
         },
         {
@@ -25,13 +26,15 @@ Ext.define('Docs.view.MainHeader',{
                     xtype: 'button',
                     itemId: 'cabinetBtn',
                     iconCls: 'x-fa fa-database',
-                    text: 'Cabinets and Shelves'
+                    text: 'Cabinets and Shelves',
+                    handler: 'setViewToCabinet'
                 },
                 {
                     xtype: 'button',
                     itemId: 'circulationBtn',
                     iconCls: 'x-fa fa-refresh',
-                    text: 'Circulation'
+                    text: 'Circulation',
+                    handler: 'setViewToCirculation'
                     // bind: {
                     //     hidden: {}
                     // }
@@ -39,14 +42,22 @@ Ext.define('Docs.view.MainHeader',{
                 {
                     xtype: 'button',
                     itemId: 'usersBtn',
-                    iconCls: 'x-fa fa-users',
-                    text: 'Users'
+                    iconCls: 'x-fa fa-gears',
+                    text: 'Admin',
+                    handler: 'setViewToUsers'
                 },'->',
                 {
                     xtype: 'button',
                     itemId: 'logoutBtn',
                     iconCls: 'x-fa fa-sign-out',
-                    text: 'Logout'
+                    text: 'Logout',
+                    handler: function () {
+                        Ext.Msg.confirm('Confirm','Do you want to log out of the system?',function (button) {
+                            if(button==='yes'){
+                                this.window.reload();
+                            }
+                        });
+                    }
                 }
             ]
         }

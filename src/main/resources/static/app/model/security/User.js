@@ -1,5 +1,5 @@
-Ext.define('Docs.model.User', {
-    extend: 'Docs.model.Base',
+Ext.define('Docs.model.security.User', {
+    extend: 'Docs.model.security.Base',
     identifier: 'userId',
     fields: [
         { name: 'userId', type: 'int', useNull: true },

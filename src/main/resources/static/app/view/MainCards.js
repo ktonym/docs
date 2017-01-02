@@ -1,8 +1,9 @@
 Ext.define('Docs.view.MainCards',{
     extend: 'Ext.container.Container',
     alias: 'widget.main-cards',
+    reference: 'mainCards',
     requires: ['Docs.view.cabinet.CabinetCard'/*,'Docs.view.circulation.CirculationCard',
-        'Docs.view.client.ClientCard','Docs.view.user.UserCard'*/],
+        'Docs.view.client.ClientCard'*/,'Docs.view.user.UserCard'],
     layout: 'card',
     items: [
         {
@@ -17,10 +18,10 @@ Ext.define('Docs.view.MainCards',{
         {
             xtype: 'client-card',
             itemId: 'clientCard'
-        },
+        }*/,
         {
             xtype: 'user-card',
             itemId: 'userCard'
-        }*/
+        }
     ]
 });

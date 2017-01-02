@@ -12,7 +12,8 @@ Ext.define('Docs.view.MainModel',{
             client: null,
             category: null,
             user: null,
-            roles: null
+            roles: null,
+            group: null
         }
     }
 });

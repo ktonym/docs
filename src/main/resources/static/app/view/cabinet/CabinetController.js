@@ -128,7 +128,7 @@ Ext.define('Docs.view.cabinet.CabinetController',{
     },
     onSaveClient: function () {
         var me = this,
-            vw = me.getView(),
+            //vw = me.getView(),
             vm = me.getViewModel(),
             client = vm.get('current.client');
             //cabinetId = vm.get('current.cabinet.cabinetId');
@@ -139,7 +139,7 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             },
             success: function (record, operation) {
                 Docs.util.Util.showToast('Client successfully saved.');
-                console.log(record);
+                // console.log(record);
                 me.doRefreshTree();
                 vm.getStore('clients').load();
             }
@@ -176,8 +176,8 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             var rowId = Ext.Number.from(recIdSplit[1]),
                 rec = vm.get('allCabinetRows').findRecord('rowId', rowId),
                 form = panel.down('cabinet-row-form');
-            console.log(rec);
-            debugger;
+            /*console.log(rec);
+            debugger;*/
             if (!Ext.isEmpty(rec)) {
                 vm.set('current.row', rec);
                 panel.getLayout().setActiveItem(form);
@@ -186,8 +186,8 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             var clientId = Ext.Number.from(recIdSplit[1]),
                 rec = vm.get('clients').findRecord('clientId', clientId),
                 form = panel.down('client-form');
-            console.log(rec);
-            debugger;
+            /*console.log(rec);
+            debugger;*/
             if (!Ext.isEmpty(rec)) {
                 vm.set('current.client', rec);
                 panel.getLayout().setActiveItem(form);

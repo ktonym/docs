@@ -1,7 +1,8 @@
 Ext.define('Docs.view.Main',{
    extend: 'Ext.container.Viewport',
     alias: 'widget.app-main',
-    requires: ['Docs.view.MainHeader','Docs.view.MainCards','Docs.view.MainModel','Ext.layout.container.VBox'],
+    requires: ['Docs.view.MainController','Docs.view.MainHeader','Docs.view.MainCards','Docs.view.MainModel','Ext.layout.container.VBox'],
+    controller: 'main',
     viewModel: 'main',
     padding: 5,
     layout: {
