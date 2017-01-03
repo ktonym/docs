@@ -9,7 +9,9 @@ import org.springframework.data.domain.Page;
  */
 public interface ICategoryService {
 
-    Result<Category> store(Long categoryId,Long clientId,String name,String description,String actionUsername);
+    Result<Category> create(Long categoryRefId,Long clientId,String description,String actionUsername);
+
+    Result<Category> update(Long categoryRefId, Long categoryId,Long clientId,String description,String actionUsername);
 
     Result<Category> remove(Long categoryId,String actionUsername);
 

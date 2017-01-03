@@ -30,7 +30,7 @@ public class File extends AbstractEntity implements EntityItem<Long> {
         this.code = fileBuilder.code;
         this.status = fileBuilder.status;
         this.category = fileBuilder.category;
-        this.circulations.addAll(fileBuilder.circulations.stream().collect(Collectors.toSet()));
+//        this.circulations.addAll(fileBuilder.circulations.stream().collect(Collectors.toSet()));
     }
 
     public static class FileBuilder{
@@ -38,7 +38,7 @@ public class File extends AbstractEntity implements EntityItem<Long> {
         private Long fileId;
         private String code;
         private Category category;
-        private Set<Circulation> circulations;
+//        private Set<Circulation> circulations;
         public FileStatus status;
 
         public FileBuilder() {
@@ -64,10 +64,10 @@ public class File extends AbstractEntity implements EntityItem<Long> {
             return this;
         }
 
-        public FileBuilder circulations(Set<Circulation> circulations){
+        /*public FileBuilder circulations(Set<Circulation> circulations){
             this.circulations = circulations;
             return this;
-        }
+        }*/
 
         public File build(){
             return new File(this);

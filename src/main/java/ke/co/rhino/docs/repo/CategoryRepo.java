@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,8 +15,7 @@ import java.util.Optional;
 public interface CategoryRepo extends PagingAndSortingRepository<Category,Long> {
 
     Page<Category> findByClient(Client client, Pageable pageable);
+    List<Category> findByClient(Client client);
     Optional<Category> getOne(Long categoryId);
     Page<Category> findByNameLike(String searchStr, Pageable pageable);
-    Optional<Category> findByName(String name);
-
 }

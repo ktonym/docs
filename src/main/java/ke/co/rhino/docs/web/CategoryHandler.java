@@ -25,18 +25,18 @@ public class CategoryHandler extends AbstractHandler{
     @Autowired
     private ICategoryService categoryService;
 
-    @RequestMapping(value = "/store",method = RequestMethod.POST,produces = {"application/json"})
+    @RequestMapping(value = "/create",method = RequestMethod.POST,produces = {"application/json"})
     @ResponseBody
-    public String store(@RequestParam(value = "data") String jsonData){
+    public String create(@RequestParam(value = "data") String jsonData){
 
         JsonObject jsonObject = parseJsonObject(jsonData);
 
-        Long categoryId = ((JsonNumber) jsonObject.get("categoryId")).longValue();
+        //Long categoryId = ((JsonNumber) jsonObject.get("categoryId")).longValue();
         Long clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
-        String name = jsonObject.getString("name");
+        Long categoryRefId = ((JsonNumber) jsonObject.get("categoryRefId")).longValue();
         String description = jsonObject.getString("description");
 
-        Result<Category> ar = categoryService.store(categoryId,clientId,name,description,"akipkoech");
+        Result<Category> ar = categoryService.create(categoryRefId,clientId,description,"akipkoech");
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
@@ -45,6 +45,29 @@ public class CategoryHandler extends AbstractHandler{
         }
 
     }
+
+    @RequestMapping(value = "/update",method = RequestMethod.POST,produces = {"application/json"})
+    @ResponseBody
+    public String update(@RequestParam(value = "data") String jsonData){
+
+        JsonObject jsonObject = parseJsonObject(jsonData);
+
+        Long categoryId = ((JsonNumber) jsonObject.get("categoryId")).longValue();
+        Long clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
+        Long categoryRefId = ((JsonNumber) jsonObject.get("categoryRefId")).longValue();
+        String description = jsonObject.getString("description");
+
+        Result<Category> ar = categoryService.update(categoryRefId,categoryId,clientId,description,"akipkoech");
+
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
+
+    }
+
+
 
     @RequestMapping(value = "/findAll",method = RequestMethod.GET,produces = {"application/json"})
     @ResponseBody

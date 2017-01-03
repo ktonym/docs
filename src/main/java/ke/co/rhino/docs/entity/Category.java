@@ -13,8 +13,8 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long categoryId;
-    @Column(unique = true, nullable = false)
-    private String name;
+    @ManyToOne
+    private CategoryRef categoryRef;
     private String description;
     @ManyToOne
     private Client client;
@@ -27,7 +27,8 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     public Category(CategoryBuilder categoryBuilder) {
         this.categoryId = categoryBuilder.categoryId;
         this.description = categoryBuilder.description;
-        this.name = categoryBuilder.name;
+        this.categoryRef = categoryBuilder.categoryRef;
+        this.client = categoryBuilder.client;
     }
 
     public static class CategoryBuilder{
@@ -36,14 +37,14 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
         private String description;
         private final Client client;
         private Set<File> files;
-        public String name;
+        public CategoryRef categoryRef;
 
         public CategoryBuilder(Client client) {
             this.client = client;
         }
 
-        public CategoryBuilder name(String name){
-            this.name = name;
+        public CategoryBuilder categoryRef(CategoryRef categoryRef){
+            this.categoryRef = categoryRef;
             return this;
         }
 
@@ -76,6 +77,10 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
         return description;
     }
 
+    public CategoryRef getCategoryRef() {
+        return categoryRef;
+    }
+
     public Set<File> getFiles() {
         return files;
     }
@@ -92,8 +97,8 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     @Override
     public void addJson(JsonObjectBuilder builder) {
         builder.add("categoryId",categoryId)
-                .add("name", name)
                 .add("description",description==null?"":description);
         client.addJson(builder);
+        categoryRef.addJson(builder);
     }
 }
