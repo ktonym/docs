@@ -4,11 +4,15 @@
 Ext.define('Docs.view.user.UserModel',{
    extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.user',
-    requires: ['Docs.model.security.Group'],
+    requires: ['Docs.model.security.Group','Docs.model.security.User'],
     data: {},
     stores: {
         groups: {
             model: 'Group',
+            autoLoad: true
+        },
+        users: {
+            model: 'User',
             autoLoad: true
         },
         navItems: {

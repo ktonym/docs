@@ -15,8 +15,8 @@ public interface IUserService {
                         String password,
                         String firstName,
                         String surname,
-                        Character locked,
-                        Character expired, String actionUsername );
+                        Boolean locked,
+                        Boolean expired, String actionUsername );
 
     Result<User> update(Long userId,
                         Long groupId,
@@ -24,8 +24,8 @@ public interface IUserService {
                         String password,
                         String firstName,
                         String surname,
-                        Character locked,
-                        Character expired, String actionUsername);
+                        Boolean locked,
+                        Boolean expired, String actionUsername);
 
     Result<User> remove(Long id, String actionUsername);
 

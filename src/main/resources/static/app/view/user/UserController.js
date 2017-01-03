@@ -67,11 +67,62 @@ Ext.define('Docs.view.user.UserController',{
     },
     
     doAddUser: function () {
-        
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            rec = Ext.create('Docs.model.security.User',{
+                groupId: '{current.group.id}'
+            }),
+            win = Ext.create({
+                xtype: 'window',
+                height: 400,
+                width: 450,
+                title: 'New user',
+                bodyPadding: '20 20 20 20',
+                items: [
+                    { xtype: 'user-form'}
+                ]
+            });
+        vm.set('current.user',rec);
+
+        vw.add([win]);
+        win.show();
     },
     
     doSaveUser: function () {
-        
+        var me = this,
+            vm = me.getViewModel(),
+            store = vm.getStore('users'),
+            rec = vm.get('current.user');
+
+        rec.save({
+            success: function (record,operation) {
+                Docs.util.Util.showToast('User saved successfully.');
+                if(record.store===undefined){
+                    store.add(record);
+                }
+            },
+            failure: function (record,operation) {
+                Docs.util.Util.showErrorMsg(operation.responseText);
+            }
+        });
+    },
+    onUsrDblClick: function (grid , record , item , index , e , eOpts) {
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            win = Ext.create({
+                xtype: 'window',
+                height: 400,
+                width: 450,
+                title: 'Edit group',
+                bodyPadding: '20 20 20 20',
+                items: [
+                    { xtype: 'user-form'}
+                ]
+            });
+        vw.add([win]);
+        win.show();
     },
 
     closeWindow: function () {
@@ -87,7 +138,7 @@ Ext.define('Docs.view.user.UserController',{
                     if(btn==='yes'){
                         rec.reject();
                         if(win){
-                            vm.set('current.group',null);
+                            //vm.set('current.group',null);
                             win.close();
                         }
                     }
@@ -95,7 +146,7 @@ Ext.define('Docs.view.user.UserController',{
             );
         } else {
             if(win){
-                vm.set('current.group',null);
+                //vm.set('current.group',null);
                 win.close();
             }
         }

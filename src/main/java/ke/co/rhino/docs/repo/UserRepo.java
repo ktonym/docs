@@ -25,9 +25,9 @@ public interface UserRepo extends PagingAndSortingRepository<User,Long> {
 
     List<User> findByUserRoles_Role(Role role);
 
-    Page<User> findByLocked(Character locked, Pageable pageable);
+    Page<User> findByLocked(Boolean locked, Pageable pageable);
 
-    Page<User> findByExpired(Character expired,Pageable pageable);
+    Page<User> findByExpired(Boolean expired,Pageable pageable);
 
     Page<User> findAll(Pageable pageable);
 

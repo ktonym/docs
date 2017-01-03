@@ -111,8 +111,10 @@ public class SecurityHandler extends AbstractHandler{
         String password = jsonObject.getString("password");
         String firstName = jsonObject.getString("firstName");
         String surname = jsonObject.getString("surname");
-        Character locked = jsonObject.getString("locked").charAt(0);
-        Character expired = jsonObject.getString("expired").charAt(0);
+//        Character locked;
+        Boolean locked = jsonObject.getBoolean("locked");
+//        Character expired;
+        Boolean expired = jsonObject.getBoolean("expired");
 
         Result<User> ar = userService.create(groupId,username,password,firstName,surname,locked,expired,"akipkoech");
 
@@ -128,14 +130,18 @@ public class SecurityHandler extends AbstractHandler{
     public String updateUser(@RequestParam(value = "data") String jsonData, HttpServletRequest request){
 
         JsonObject jsonObject = parseJsonObject(jsonData);
-        Long id = ((JsonNumber) jsonObject.get("id")).longValue();
+        Long id = ((JsonNumber) jsonObject.get("userId")).longValue();
         Long groupId = ((JsonNumber) jsonObject.get("groupId")).longValue();
         String username = jsonObject.getString("username");
         String password = jsonObject.getString("password");
         String firstName = jsonObject.getString("firstName");
         String surname = jsonObject.getString("surname");
-        Character locked = jsonObject.getString("locked").charAt(0);
-        Character expired = jsonObject.getString("expired").charAt(0);
+
+        //Character locked;
+        Boolean locked = jsonObject.getBoolean("locked");
+        //Character expired;
+        Boolean expired = jsonObject.getBoolean("expired");
+
 
         Result<User> ar = userService.update(id,groupId,username,password,firstName,surname,locked,expired,"akipkoech");
 

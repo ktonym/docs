@@ -19,8 +19,8 @@ public class User extends AbstractEntity implements EntityItem<Long>{
     private String password;
     private String firstName;
     private String surname;
-    private Character locked;
-    private Character expired;
+    private Boolean locked;
+    private Boolean expired;
     private int failedLogins;
     @OneToMany(mappedBy = "user")
     private Set<Circulation> circulations;
@@ -55,8 +55,8 @@ public class User extends AbstractEntity implements EntityItem<Long>{
         private String firstName;
         private String surname;
         private Group group;
-        private Character locked;
-        private Character expired;
+        private Boolean locked;
+        private Boolean expired;
         public int failedLogins;
         //private Set<Circulation> circulations;
 
@@ -93,12 +93,12 @@ public class User extends AbstractEntity implements EntityItem<Long>{
             return this;
         }
 
-        public UserBuilder locked(Character locked){
+        public UserBuilder locked(Boolean locked){
             this.locked = locked;
             return this;
         }
 
-        public UserBuilder expired(Character expired){
+        public UserBuilder expired(Boolean expired){
             this.expired = expired;
             return this;
         }
@@ -142,12 +142,12 @@ public class User extends AbstractEntity implements EntityItem<Long>{
     }
 
     public Boolean getLocked() {
-        return locked == null ? false : locked.equals('Y');
+        return locked;
     }
 
     public Boolean getExpired() {
 
-        return expired == null ? false : expired.equals('Y');
+        return expired;// == null ? false : expired.equals('Y');
     }
 
     public int getFailedLogins() {
@@ -177,8 +177,8 @@ public class User extends AbstractEntity implements EntityItem<Long>{
                 .add("username", username)
                 .add("firstName", firstName)
                 .add("surname", surname)
-                .add("locked", locked + "")
-                .add("expired", expired + "")
+                .add("locked", locked)
+                .add("expired", expired )
                 .add("fullName", firstName + " " + surname);
         group.addJson(builder);
     }

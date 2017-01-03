@@ -28,8 +28,8 @@ public class UserService implements IUserService {
     @Override
     public Result<User> create(Long groupId, String username,
                                String password, String firstName,
-                               String surname, Character locked,
-                               Character expired, String actionUsername) {
+                               String surname, Boolean locked,
+                               Boolean expired, String actionUsername) {
 
         if(groupId==null||groupId<1){
             return ResultFactory.getFailResult("Invalid group ID. Cannot save user");
@@ -43,13 +43,13 @@ public class UserService implements IUserService {
             return ResultFactory.getFailResult("First name and surname are mandatory.");
         }
 
-        if(locked==null){
+        /*if(locked==null){
             locked = 'N';
         }
 
         if(expired==null){
             expired = 'Y';
-        }
+        }*/
 
         if(password==null||password.isEmpty()){
             password = "Pass123";
@@ -80,7 +80,7 @@ public class UserService implements IUserService {
     public Result<User> update(Long userId, Long groupId,
                                String username, String password,
                                String firstName, String surname,
-                               Character locked, Character expired, String actionUsername) {
+                               Boolean locked, Boolean expired, String actionUsername) {
 
         if(userId==null||userId<1){
             return ResultFactory.getFailResult("Invalid user ID. Update failed.");
@@ -111,13 +111,13 @@ public class UserService implements IUserService {
             builder.surname(surname);
         }
 
-        if(locked==null){
+        /*if(locked==null){
             locked = 'N';
         }
 
         if(expired==null){
             expired = 'Y';
-        }
+        }*/
 
         builder.expired(expired).locked(locked);
 
@@ -176,7 +176,7 @@ public class UserService implements IUserService {
                 int failedAttempts = failedUser.getFailedLogins();
                 User.UserBuilder fakeUserBuilder = new User.UserBuilder(username).failedLogins(failedAttempts++);
                 if(failedAttempts>3){
-                    fakeUserBuilder.locked('Y');
+                    fakeUserBuilder.locked(true);
                 }
                 repo.save(fakeUserBuilder.build());
             }
