@@ -5,6 +5,8 @@ Ext.define('Docs.view.user.GroupList',{
     extend: 'Ext.grid.Panel',
     alias: 'widget.group-list',
     reference: 'groupList',
+    title: 'Groups Listing',
+    iconCls: 'x-fa fa-group',
     bind: {
         store: '{groups}',
         selection: '{current.group}'

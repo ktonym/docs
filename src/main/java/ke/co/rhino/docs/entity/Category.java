@@ -13,11 +13,9 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long categoryId;
-    @ManyToOne
-    private CategoryRef categoryRef;
+    @Column(unique = true,nullable = false)
+    private String name;
     private String description;
-    @ManyToOne
-    private Client client;
     @OneToMany(mappedBy = "category")
     private Set<File> files;
 
@@ -27,25 +25,21 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     public Category(CategoryBuilder categoryBuilder) {
         this.categoryId = categoryBuilder.categoryId;
         this.description = categoryBuilder.description;
-        this.categoryRef = categoryBuilder.categoryRef;
-        this.client = categoryBuilder.client;
+        this.name = categoryBuilder.name;
     }
 
     public static class CategoryBuilder{
 
         private Long categoryId;
         private String description;
-        private final Client client;
-        private Set<File> files;
-        public CategoryRef categoryRef;
+        public String name;
 
-        public CategoryBuilder(Client client) {
-            this.client = client;
+        public CategoryBuilder() {
         }
 
-        public CategoryBuilder categoryRef(CategoryRef categoryRef){
-            this.categoryRef = categoryRef;
-            return this;
+        public CategoryBuilder name(String name){
+            this.name = name;
+            return  this;
         }
 
         public CategoryBuilder description(String description){
@@ -55,11 +49,6 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
 
         public CategoryBuilder categoryId(Long categoryId){
             this.categoryId = categoryId;
-            return this;
-        }
-
-        public CategoryBuilder files(Set<File> files){
-            this.files = files;
             return this;
         }
 
@@ -77,16 +66,8 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
         return description;
     }
 
-    public CategoryRef getCategoryRef() {
-        return categoryRef;
-    }
-
     public Set<File> getFiles() {
         return files;
-    }
-
-    public Client getClient() {
-        return client;
     }
 
     @Override
@@ -97,8 +78,7 @@ public class Category extends AbstractEntity implements EntityItem<Long> {
     @Override
     public void addJson(JsonObjectBuilder builder) {
         builder.add("categoryId",categoryId)
-                .add("description",description==null?"":description);
-        client.addJson(builder);
-        categoryRef.addJson(builder);
+                .add("description",description==null?"":description)
+                .add("name",name);
     }
 }

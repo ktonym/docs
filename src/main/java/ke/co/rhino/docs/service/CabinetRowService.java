@@ -76,9 +76,9 @@ public class CabinetRowService implements ICabinetRowService {
 
                 row = builder.build();
 
-                System.out.println("---- Row info ----");
+                /*System.out.println("---- Row info ----");
                 System.out.println("Row number: ".concat(row.getRowNumber().toString()));
-                System.out.println("Cabinet number: ".concat(cabinetOpt.get().getId().toString()));
+                System.out.println("Cabinet number: ".concat(cabinetOpt.get().getId().toString()));*/
 
                 repo.save(row);
                 return ResultFactory.getSuccessResult(row);

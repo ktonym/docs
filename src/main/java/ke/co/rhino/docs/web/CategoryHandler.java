@@ -31,12 +31,10 @@ public class CategoryHandler extends AbstractHandler{
 
         JsonObject jsonObject = parseJsonObject(jsonData);
 
-        //Long categoryId = ((JsonNumber) jsonObject.get("categoryId")).longValue();
-        Long clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
-        Long categoryRefId = ((JsonNumber) jsonObject.get("categoryRefId")).longValue();
+        String name =  jsonObject.getString("name");
         String description = jsonObject.getString("description");
 
-        Result<Category> ar = categoryService.create(categoryRefId,clientId,description,"akipkoech");
+        Result<Category> ar = categoryService.create(name,description,"akipkoech");
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
@@ -53,11 +51,12 @@ public class CategoryHandler extends AbstractHandler{
         JsonObject jsonObject = parseJsonObject(jsonData);
 
         Long categoryId = ((JsonNumber) jsonObject.get("categoryId")).longValue();
-        Long clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
-        Long categoryRefId = ((JsonNumber) jsonObject.get("categoryRefId")).longValue();
+        //Long clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
+        //Long categoryRefId = ((JsonNumber) jsonObject.get("categoryRefId")).longValue();
+        String name = jsonObject.getString("name");
         String description = jsonObject.getString("description");
 
-        Result<Category> ar = categoryService.update(categoryRefId,categoryId,clientId,description,"akipkoech");
+        Result<Category> ar = categoryService.update(categoryId,name,description,"akipkoech");
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
@@ -71,15 +70,15 @@ public class CategoryHandler extends AbstractHandler{
 
     @RequestMapping(value = "/findAll",method = RequestMethod.GET,produces = {"application/json"})
     @ResponseBody
-    public String findAll(@RequestParam(value = "clientId") String clientIdStr, HttpServletRequest request){
+    public String findAll(HttpServletRequest request){
 
-        Long clientId = Long.valueOf(clientIdStr);
+        //Long clientId = Long.valueOf(clientIdStr);
 
         int page = Integer.valueOf(request.getParameter("page"));
         int size = Integer.valueOf(request.getParameter("limit"));
         String actionUsername = "akipkoech";
 
-        Result<Page<Category>> ar = categoryService.findAll(clientId,page,size,actionUsername);
+        Result<Page<Category>> ar = categoryService.findAll(page,size,actionUsername);
 
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());

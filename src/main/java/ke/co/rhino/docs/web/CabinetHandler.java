@@ -215,23 +215,38 @@ public class CabinetHandler extends AbstractHandler {
 
     }
 
-    @RequestMapping(value = "/store", method = RequestMethod.POST, produces = {"application/json"})
+    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = {"application/json"})
     @ResponseBody
-    public String store(@RequestParam(value = "data")String jsonData,HttpServletRequest request){
+    public String create(@RequestParam(value = "data")String jsonData,HttpServletRequest request){
+
+        JsonObject jsonObject = parseJsonObject(jsonData);
+
+        Optional<Long> cabinetIdOpt = Optional.empty();
+
+        CabinetType cabinetType = CabinetType.valueOf(jsonObject.getString("cabinetType"));
+//        Integer shelfNumber = getIntegerValue(jsonObject.get("shelfNumber"));
+        String actionUsername = "akipkoech";
+
+        Result<Cabinet> ar = service.store(cabinetIdOpt,cabinetType,/*shelfNumber,*/actionUsername);
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = {"application/json"})
+    @ResponseBody
+    public String update(@RequestParam(value = "data")String jsonData,HttpServletRequest request){
 
         JsonObject jsonObject = parseJsonObject(jsonData);
 
         Long cabinetId;
         Optional<Long> cabinetIdOpt;
 
-        try{
-            cabinetId = ((JsonNumber) jsonObject.get("id")).longValue();
-            cabinetIdOpt = Optional.of(cabinetId);
-        } catch (NullPointerException e){
-            cabinetIdOpt = Optional.empty();
-        } catch (Exception e){
-            cabinetIdOpt = Optional.empty();
-        }
+        cabinetId = ((JsonNumber) jsonObject.get("id")).longValue();
+        cabinetIdOpt = Optional.of(cabinetId);
+
 
 //        Optional<Long> cabinetIdOpt = Optional.of(((JsonNumber) jsonObject.get("cabinetId")).longValue());
         CabinetType cabinetType = CabinetType.valueOf(jsonObject.getString("cabinetType"));

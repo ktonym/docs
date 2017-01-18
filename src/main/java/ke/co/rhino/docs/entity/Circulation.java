@@ -2,6 +2,7 @@ package ke.co.rhino.docs.entity;
 
 import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -14,7 +15,10 @@ public class Circulation extends AbstractEntity implements EntityItem<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long circulationId;
+    @Column(nullable = false)
     private LocalDate borrowed;
+    @Column(nullable = false)
+    @Convert(converter = PeriodDaysPersistenceConverter.class)
     private Period duration;
     private LocalDate returned;
     @ManyToOne

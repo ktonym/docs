@@ -2,8 +2,9 @@ Ext.define('Docs.view.cabinet.CabinetCard',{
     extend: 'Ext.panel.Panel',
     alias: 'widget.cabinet-card',
     reference: 'cabinetCard',
-    requires: ['Ext.layout.container.HBox',/*'Docs.view.cabinet.CabinetGrid',*/'Docs.view.cabinet.CabinetTree',
-        'Docs.view.cabinet.CabinetForm','Docs.view.cabinet.CabinetController','Docs.view.cabinet.CabinetModel'],
+    requires: ['Ext.layout.container.HBox','Docs.view.cabinet.ClientTab','Docs.view.cabinet.CabinetTree','Docs.view.client.ClientList',
+        'Docs.view.cabinet.CabinetForm','Docs.view.cabinet.RowList','Docs.view.cabinet.CabinetController','Docs.view.cabinet.CabinetModel',
+        'Docs.view.cabinet.CabinetGrid'],
     viewModel: 'cabinet',
     controller: 'cabinet',
     layout: 'border',
@@ -24,25 +25,29 @@ Ext.define('Docs.view.cabinet.CabinetCard',{
                 type: 'card'
             },
             activeItem: 0,
+            defaults: {
+              padding: 10
+            },
             items: [
                 {
                     xtype: 'panel',
-                    html: '<br><br><h4>Welcome, to proceed please select an item on the <b>left</b></h4>'
+                    padding: 10,
+                    html: '<br><br><h3>Welcome, <br>to proceed please select an item on the <b>left</b></h3>'
                 },
                 {
-                    xtype: 'cabinet-form',
-                    // flex: 3,
-                    padding: 10
+                    xtype: 'cabinet-grid'
                 },
                 {
-                    xtype: 'cabinet-row-form',
-                    // flex: 3,
-                    padding: 10
+                    xtype: 'cabinet-form'
                 },
                 {
-                    xtype: 'client-form',
-                    // flex: 3,
-                    padding: 10
+                    xtype: 'row-list'
+                },
+                {
+                    xtype: 'client-list'
+                },
+                {
+                    xtype: 'client-tab'
                 }
             ]
 

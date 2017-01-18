@@ -9,13 +9,11 @@ import org.springframework.data.domain.Page;
  */
 public interface ICategoryService {
 
-    Result<Category> create(Long categoryRefId,Long clientId,String description,String actionUsername);
-
-    Result<Category> update(Long categoryRefId, Long categoryId,Long clientId,String description,String actionUsername);
-
+    Result<Category> create(String name,String description,String actionUsername);
+    Result<Category> update(Long categoryId, String name, String desc, String actionUsername);
     Result<Category> remove(Long categoryId,String actionUsername);
 
-    Result<Page<Category>> findAll(Long clientId,int page,int size,String actionUsername);
+    Result<Page<Category>> findAll(int page,int size,String actionUsername);
 
     Result<Page<Category>> searchByName(String searchStr,int page,int size,String actionUsername);
 }

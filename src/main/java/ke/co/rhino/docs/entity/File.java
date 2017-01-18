@@ -2,6 +2,8 @@ package ke.co.rhino.docs.entity;
 
 import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,14 +15,22 @@ public class File extends AbstractEntity implements EntityItem<Long> {
 
     @Id
     private Long fileId;
-    @Column(nullable = false,unique = true)
+    @Column(nullable = true,unique = true)
     private String code;
     @Enumerated(value = EnumType.STRING)
     private FileStatus status;
+    @Convert(converter = LocalDatePersistenceConverter.class)
+    private LocalDate date;
+    private String description;
+    private String location;
     @ManyToOne
     private Category category;
+    @ManyToOne
+    private Volume volume;
     @OneToMany(mappedBy = "file")
     private Set<Circulation> circulations;
+
+    private static final DateTimeFormatter DATE_FORMATTER_yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     public File() {
     }
@@ -29,6 +39,10 @@ public class File extends AbstractEntity implements EntityItem<Long> {
         this.fileId = fileBuilder.fileId;
         this.code = fileBuilder.code;
         this.status = fileBuilder.status;
+        this.date = fileBuilder.date;
+        this.description = fileBuilder.description;
+        this.location = fileBuilder.location;
+        this.volume = fileBuilder.volume;
         this.category = fileBuilder.category;
 //        this.circulations.addAll(fileBuilder.circulations.stream().collect(Collectors.toSet()));
     }
@@ -39,7 +53,11 @@ public class File extends AbstractEntity implements EntityItem<Long> {
         private String code;
         private Category category;
 //        private Set<Circulation> circulations;
-        public FileStatus status;
+        private FileStatus status;
+        private LocalDate date;
+        private String description;
+        private String location;
+        private Volume volume;
 
         public FileBuilder() {
         }
@@ -64,6 +82,25 @@ public class File extends AbstractEntity implements EntityItem<Long> {
             return this;
         }
 
+        public FileBuilder date(LocalDate date){
+            this.date = date;
+            return this;
+        }
+
+        public FileBuilder description(String description){
+            this.description = description;
+            return this;
+        }
+
+        public FileBuilder location(String location){
+            this.location = location;
+            return this;
+        }
+
+        public FileBuilder volume(Volume volume){
+            this.volume = volume;
+            return this;
+        }
         /*public FileBuilder circulations(Set<Circulation> circulations){
             this.circulations = circulations;
             return this;
@@ -103,7 +140,11 @@ public class File extends AbstractEntity implements EntityItem<Long> {
     public void addJson(JsonObjectBuilder builder) {
         builder.add("fileId",fileId)
                 .add("code",code)
-                .add("status", status.toString());
+                .add("status", status.toString())
+                .add("date", date == null ? "" : DATE_FORMATTER_yyyyMMdd.format(date))
+                .add("fileDesc", description)
+                .add("location",location);
         category.addJson(builder);
+        volume.addJson(builder);
     }
 }

@@ -2,11 +2,11 @@ package ke.co.rhino.docs.repo;
 
 import ke.co.rhino.docs.entity.CabinetRow;
 import ke.co.rhino.docs.entity.Client;
-import ke.co.rhino.docs.vo.Result;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,4 +26,7 @@ public interface ClientRepo extends PagingAndSortingRepository<Client,Long> {
 
     @Query("SELECT c FROM Client c")
     List<Client> getAll();
+
+    /*@Query("SELECT c FROM Client c WHERE c.rowId = :rowId")
+    List<Client> findByCabinetRowId(@Param("rowId") Long rowId);*/
 }

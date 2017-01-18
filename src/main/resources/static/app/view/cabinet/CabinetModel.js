@@ -3,7 +3,8 @@ Ext.define('Docs.view.cabinet.CabinetModel',{
 
     extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.cabinet',
-    requires: ['Docs.model.Cabinet','Docs.model.CabinetRow'],
+    requires: ['Docs.model.Cabinet','Docs.model.CabinetRow','Docs.store.CabinetRow',
+        'Docs.store.RowClients','Docs.model.Client','Docs.model.Volume'],
     data: {},
     stores:{
 
@@ -12,7 +13,8 @@ Ext.define('Docs.view.cabinet.CabinetModel',{
             autoLoad: true,
             root: {
                 // name: 'root',
-                expanded: true
+                expanded: true,
+                text: 'Library'
             },
             fields: [
                 { name: 'id', type: 'auto'}, { name: 'text'}
@@ -30,15 +32,7 @@ Ext.define('Docs.view.cabinet.CabinetModel',{
             autoLoad: true
         },
         cabinetRows: {
-            model: 'CabinetRow',
-            autoLoad: false,
-            proxy: {
-                type: 'ajax',
-                url: '/cabinetrow/findAll',
-                extraParams: {
-                    cabinetId: '{current.cabinet.cabinetId}'
-                }
-            }
+           type: 'cabinet-row'
         },
         allCabinetRows: {
             model: 'CabinetRow',
@@ -48,10 +42,32 @@ Ext.define('Docs.view.cabinet.CabinetModel',{
                 url: '/cabinetrow/findZote'
             }
         },
+        rowClients: {
+            type: 'row-clients'
+        },
         clients: {
             model: 'Client',
             autoLoad: true
+        },
+        volumes: {
+            model: 'Volume',
+            autoLoad: true
+        },
+        clientVolumes: {
+            model: 'Volume',
+            autoLoad: false,
+            proxy: {
+                type: 'ajax',
+                url: '/volume/findByClient',
+                extraParams: {
+                    clientId: '{current.client.clientId}'
+                }
+            }
         }
+        /*,categories: {
+            model: 'Category',
+            autoLoad: true
+        }*/
     },
     formulas: {
         currentCabinet: {

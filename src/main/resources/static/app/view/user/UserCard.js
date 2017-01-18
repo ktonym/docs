@@ -4,7 +4,8 @@ Ext.define('Docs.view.user.UserCard',{
     reference: 'userCard',
     requires: ['Docs.view.user.UserList','Docs.view.user.UserForm',
         'Docs.view.user.GroupList','Docs.view.user.GroupForm',
-        'Docs.view.user.UserModel','Docs.view.user.UserController'],
+        'Docs.view.user.UserModel','Docs.view.user.UserController',
+        'Docs.view.setup.CategoryList','Docs.view.setup.CategoryForm'],
     controller: 'user',
     viewModel: 'user',
     layout: 'border',
@@ -12,7 +13,7 @@ Ext.define('Docs.view.user.UserCard',{
         {
             region: 'west',
             width: 300,
-            split: true,
+            //split: true,
             reference: 'treelistContainer',
             layout: {
                 type: 'vbox',
@@ -23,20 +24,14 @@ Ext.define('Docs.view.user.UserCard',{
             items: [{
                 xtype: 'treelist',
                 reference: 'treelist',
+                title: 'Admin Menu',
+                iconCls: 'x-fa fa-gears',
                 bind: '{navItems}',
                 listeners: {
                     selectionchange: 'onNavTreeSelectionChange'
                 }
-            }],
+            }]
         },
-        /*{
-            xtype:'user-list',
-            flex: 2
-        },
-        {
-            xtype: 'user-form',
-            flex: 1
-        }*/
         {
             region: 'center',
             xtype: 'container',
@@ -52,6 +47,10 @@ Ext.define('Docs.view.user.UserCard',{
                 {
                     xtype: 'user-list',
                     itemId: 'userList'
+                },
+                {
+                    xtype: 'category-list',
+                    itemId: 'categoryList'
                 }
             ]
 

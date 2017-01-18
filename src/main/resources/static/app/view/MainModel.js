@@ -9,8 +9,9 @@ Ext.define('Docs.view.MainModel',{
         current: {
             cabinet: null,
             cabinetRow: null,
-            client: null,
             category: null,
+            volume: null,
+            client: null,
             user: null,
             roles: null,
             group: null

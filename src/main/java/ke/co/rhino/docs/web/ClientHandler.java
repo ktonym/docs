@@ -26,9 +26,9 @@ public class ClientHandler extends AbstractHandler {
     @Autowired
     private IClientService clientService;
 
-    @RequestMapping(value = "/store", method = RequestMethod.POST, produces = {"application/json"})
+    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = {"application/json"})
     @ResponseBody
-    public String store(@RequestParam(value = "data")String jsonData,HttpServletRequest request){
+    public String create(@RequestParam(value = "data")String jsonData,HttpServletRequest request){
 
         JsonObject jsonObject = parseJsonObject(jsonData);
         //Long cabinetId = ((JsonNumber) jsonObject.get("cabinetId")).longValue();
@@ -39,18 +39,35 @@ public class ClientHandler extends AbstractHandler {
         String email = jsonObject.getString("email");
         Long rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
 
+        Optional<Long> clientIdOpt = Optional.empty();
+
+        Result<Client> ar = clientService.store(clientIdOpt,clientName,rowId,tel,email,pin,"AKipkoech");
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
+
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = {"application/json"})
+    @ResponseBody
+    public String update(@RequestParam(value = "data")String jsonData,HttpServletRequest request){
+
+        JsonObject jsonObject = parseJsonObject(jsonData);
+        //Long cabinetId = ((JsonNumber) jsonObject.get("cabinetId")).longValue();
+        // Long clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
+        String clientName = jsonObject.getString("clientName");
+        String tel = jsonObject.getString("tel");
+        String pin = jsonObject.getString("pin");
+        String email = jsonObject.getString("email");
+        Long rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
+
         Long clientId;
         Optional<Long> clientIdOpt;
 
-        try{
-            clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
-            clientIdOpt = Optional.of(clientId);
-        } catch (NullPointerException e){
-            clientIdOpt = Optional.empty();
-        } catch (Exception e){
-            clientIdOpt = Optional.empty();
-        }
-
+        clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
+        clientIdOpt = Optional.of(clientId);
 
         Result<Client> ar = clientService.store(clientIdOpt,clientName,rowId,tel,email,pin,"AKipkoech");
         if(ar.isSuccess()){
@@ -65,6 +82,20 @@ public class ClientHandler extends AbstractHandler {
     @ResponseBody
     public String findAll(HttpServletRequest request){
         Result<List<Client>> ar = clientService.findEverything("AKipkoech");
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
+    }
+
+    @RequestMapping(value = "/findByRow", method = RequestMethod.GET, produces = {"application/json"})
+    @ResponseBody
+    public String findByRow(HttpServletRequest request, @RequestParam(value = "rowId") String rowIdStr){
+
+        Long rowId = Long.valueOf(rowIdStr);
+
+        Result<List<Client>> ar = clientService.findByRowId(rowId, "Akipkoech");
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
         } else {

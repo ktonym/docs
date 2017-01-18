@@ -52,7 +52,7 @@
      * The name of the theme for this application.
      */
     
-    "theme": "theme-triton",
+    "theme": "theme-ec-triton",
     
     
     /**
@@ -232,6 +232,11 @@
         {
             "path": "app.js",
             "bundle": true
+        },
+        {
+            "path": "http://localhost:8900/resources/themer/js/themerInspect.js",
+            "remote": true,
+            "bootstrap": true
         }
     ],
 

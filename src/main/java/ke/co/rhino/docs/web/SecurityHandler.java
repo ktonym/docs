@@ -26,7 +26,7 @@ import static ke.co.rhino.docs.web.SecurityHelper.SESSION_ATTRIB_USER;
  * Created by anthony.kipkoech on 12/28/2016.
  */
 @Controller
-@RequestMapping("/security")
+//@RequestMapping("/security")
 public class SecurityHandler extends AbstractHandler{
 
     @Autowired

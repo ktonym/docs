@@ -27,25 +27,17 @@ public class CabinetRowHandler extends AbstractHandler{
     @Autowired
     private ICabinetRowService cabinetRowService;
 
-    @RequestMapping(value = "/store", method = RequestMethod.POST, produces = {"application/json"})
+    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = {"application/json"})
     @ResponseBody
-    public String store(@RequestParam(value = "data",required = true) String jsonData, HttpServletRequest request){
+    public String create(@RequestParam(value = "data",required = true) String jsonData, HttpServletRequest request){
 
         JsonObject jsonObject = parseJsonObject(jsonData);
 
         Long rowNumber = ((JsonNumber) jsonObject.get("rowNumber")).longValue();
         Long cabinetId = ((JsonNumber) jsonObject.get("cabinetId")).longValue();
         Long rowId;
-        Optional<Long> rowIdOpt;
+        Optional<Long> rowIdOpt = Optional.empty();
 
-        try{
-            rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
-            rowIdOpt = Optional.of(rowId);
-        } catch (NullPointerException e){
-            rowIdOpt = Optional.empty();
-        }catch (Exception e){
-            rowIdOpt = Optional.empty();
-        }
 
         Result<CabinetRow> ar = cabinetRowService.store(rowIdOpt,rowNumber,cabinetId,"AKipkoech");
 
@@ -54,7 +46,30 @@ public class CabinetRowHandler extends AbstractHandler{
         } else {
             return getJsonErrorMsg(ar.getMsg());
         }
+    }
 
+    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = {"application/json"})
+    @ResponseBody
+    public String update(@RequestParam(value = "data",required = true) String jsonData, HttpServletRequest request){
+
+        JsonObject jsonObject = parseJsonObject(jsonData);
+
+        Long rowNumber = ((JsonNumber) jsonObject.get("rowNumber")).longValue();
+        Long cabinetId = ((JsonNumber) jsonObject.get("cabinetId")).longValue();
+        Long rowId;
+        Optional<Long> rowIdOpt;
+
+        rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
+        rowIdOpt = Optional.of(rowId);
+
+
+        Result<CabinetRow> ar = cabinetRowService.store(rowIdOpt,rowNumber,cabinetId,"AKipkoech");
+
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
     }
 
     @RequestMapping(value="/delete", method = RequestMethod.POST, produces = {"application/json"})

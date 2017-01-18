@@ -14,8 +14,8 @@ import java.util.Optional;
  */
 public interface CategoryRepo extends PagingAndSortingRepository<Category,Long> {
 
-    Page<Category> findByClient(Client client, Pageable pageable);
-    List<Category> findByClient(Client client);
+    Category findByName(String name);
+    List<Category> findAll();
     Optional<Category> getOne(Long categoryId);
-    Page<Category> findByNameLike(String searchStr, Pageable pageable);
+    //Page<Category> findByNameLike(String searchStr, Pageable pageable);
 }

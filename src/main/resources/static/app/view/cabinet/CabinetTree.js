@@ -2,7 +2,7 @@ Ext.define('Docs.view.cabinet.CabinetTree',{
     extend: 'Ext.tree.Panel',
     alias: 'widget.cabinet-tree',
     // reference: 'cabTree',
-    title: 'Document manager',
+    title: 'Document Menu',
     requires: ['Docs.store.CabinetTree'],
     bind: {
         store: '{cabinetTree}'
@@ -13,16 +13,16 @@ Ext.define('Docs.view.cabinet.CabinetTree',{
     viewConfig: {
         preserveScrollOnRefresh: true
     },
-    tools: [{
-        type: 'expand',
-        qtip: 'Expand All'
-    },{
-        type: 'collapse',
-        qtip: 'Collapse All'
-    },{
-        type: 'refresh',
-        qtip: 'Refresh Tree'
-    }],
+    // tools: [{
+    //     type: 'expand',
+    //     qtip: 'Expand All'
+    // },{
+    //     type: 'collapse',
+    //     qtip: 'Collapse All'
+    // },{
+    //     type: 'refresh',
+    //     qtip: 'Refresh Tree'
+    // }],
     columns: [{
         xtype: 'treecolumn',
         dataIndex: 'text',

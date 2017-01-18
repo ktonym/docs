@@ -1,17 +1,16 @@
 package ke.co.rhino.docs.service;
 
 import ke.co.rhino.docs.entity.Category;
-import ke.co.rhino.docs.entity.CategoryRef;
-import ke.co.rhino.docs.entity.Client;
-import ke.co.rhino.docs.repo.CategoryRefRepo;
 import ke.co.rhino.docs.repo.CategoryRepo;
 import ke.co.rhino.docs.repo.ClientRepo;
+import ke.co.rhino.docs.repo.FileRepo;
 import ke.co.rhino.docs.vo.Result;
 import ke.co.rhino.docs.vo.ResultFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -27,57 +26,48 @@ public class CategoryService implements ICategoryService {
     @Autowired
     private CategoryRepo repo;
     @Autowired
-    private ClientRepo clientRepo;
-    @Autowired
-    private CategoryRefRepo categoryRefRepo;
+    private FileRepo fileRepo;
 
     @Override
-    public Result<Category> create(Long categoryRefId, Long clientId, String description, String actionUsername) {
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public Result<Category> create(String name, String description, String actionUsername) {
 
-        if(categoryRefId==null||categoryRefId<1){
-            return ResultFactory.getFailResult("Invalid CategoryRef ID provided. Save failed.");
+        if(name==null||name.trim().isEmpty()){
+            return ResultFactory.getFailResult("Invalid category name provided. Cannot save");
         }
-        if(clientId==null||clientId<1){
-            return ResultFactory.getFailResult("Invalid Client ID provided. Save failed.");
+        Category catByName = repo.findByName(name);
+        if(catByName==null){
+            Category.CategoryBuilder builder = new Category.CategoryBuilder()
+                    .name(name);
+
+            if(!description.trim().isEmpty()){
+                builder.description(description);
+            }
+
+            Category cat = builder.build();
+
+            repo.save(cat);
+            return ResultFactory.getSuccessResult(cat);
+        } else {
+            return ResultFactory.getFailResult("Name is already in use. Cannot save.");
         }
-        CategoryRef ref = categoryRefRepo.findOne(categoryRefId);
-        if(ref==null){
-            return ResultFactory.getFailResult("No category ref with ID ["+categoryRefId+"] was found. Save failed.");
-        }
-        Client client = clientRepo.findOne(clientId);
-        if(client==null){
-            return ResultFactory.getFailResult("No client with ID ["+clientId+"] was found. Save failed.");
-        }
-        Category.CategoryBuilder builder = new Category.CategoryBuilder(client).categoryRef(ref);
-        if(!description.trim().isEmpty()){
-            builder.description(description);
-        }
-        Category category = builder.build();
-        return ResultFactory.getSuccessResult(category);
 
     }
 
-    @Override
-    public Result<Category> update(Long categoryRefId, Long categoryId, Long clientId, String description, String actionUsername) {
 
-        if(categoryRefId==null||categoryRefId<1){
-            return ResultFactory.getFailResult("Invalid CategoryRef ID provided. Update failed.");
-        }
+    @Override
+    public Result<Category> update(Long categoryId, String name, String description, String actionUsername) {
+
+
         if(categoryId==null||categoryId<1){
             return ResultFactory.getFailResult("Invalid Category ID provided. Update failed.");
         }
-        if(clientId==null||clientId<1){
-            return ResultFactory.getFailResult("Invalid Client ID provided. Update failed.");
+
+        if(name==null||name.trim().isEmpty()){
+            return ResultFactory.getFailResult("Invalid category name provided. Cannot update.");
         }
-        CategoryRef ref = categoryRefRepo.findOne(categoryRefId);
-        if(ref==null){
-            return ResultFactory.getFailResult("No category ref with ID ["+categoryRefId+"] was found. Update failed.");
-        }
-        Client client = clientRepo.findOne(clientId);
-        if(client==null){
-            return ResultFactory.getFailResult("No client with ID ["+clientId+"] was found. Update failed.");
-        }
-        List<Category> catsFromClient = repo.findByClient(client);
+
+        /*List<Category> catsFromClient = repo.findByClient(client);
 
         Boolean found = catsFromClient.stream()
                 .map( category -> {
@@ -88,13 +78,16 @@ public class CategoryService implements ICategoryService {
 
         if(!found){
             return ResultFactory.getFailResult("Cannot change category's client. Update failed.");
-        }
+        }*/
 
-        Category.CategoryBuilder builder = new Category.CategoryBuilder(client).categoryRef(ref).categoryId(categoryId);
+        Category.CategoryBuilder builder = new Category.CategoryBuilder()
+                .name(name)
+                .categoryId(categoryId);
         if(!description.trim().isEmpty()){
             builder.description(description);
         }
         Category category = builder.build();
+        repo.save(category);
         return ResultFactory.getSuccessResult(category);
     }
 
@@ -104,21 +97,11 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public Result<Page<Category>> findAll(Long clientId,int page,int size,String actionUsername) {
-
-        if(clientId==null||clientId<1){
-            return ResultFactory.getFailResult("Invalid client id provided.");
-        }
-
-        Optional<Client> clientOpt = clientRepo.getOne(clientId);
-
-        if(!clientOpt.isPresent()){
-            return ResultFactory.getFailResult("No client with ID ["+clientId+"] was found.");
-        }
+    public Result<Page<Category>> findAll(int page,int size,String actionUsername) {
 
         PageRequest request = new PageRequest(page-1,size);
 
-        Page<Category> categories = repo.findByClient(clientOpt.get(),request);
+        Page<Category> categories = repo.findAll(request);
 
         return ResultFactory.getSuccessResult(categories);
 

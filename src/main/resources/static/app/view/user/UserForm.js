@@ -96,7 +96,7 @@ Ext.define('Docs.view.user.UserForm',{
                 xtype: 'button',
                 iconCls: 'x-fa fa-close',
                 text: 'Exit',
-                handler: 'closeUserWindow'
+                handler: 'closeUsrWindow'
             }
         ]
     }

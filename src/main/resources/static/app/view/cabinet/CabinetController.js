@@ -4,6 +4,9 @@
 Ext.define('Docs.view.cabinet.CabinetController',{
     extend: 'Ext.app.ViewController',
     alias: 'controller.cabinet',
+    mixins: {
+        ctlMixin: 'Docs.util.ControllerMixin'
+    },
 
     onReject: function () {
         var cab = this.getViewModel().get('current.cabinet');
@@ -18,6 +21,14 @@ Ext.define('Docs.view.cabinet.CabinetController',{
     },
     onCancelEdit: function () {
         console.log('Cancelling..');
+    },
+    onCloseClientForm: function(){
+      var me = this,
+          vw = me.getView(),
+          win = vw.down('window'),
+          vm = me.getViewModel(),
+          rec = vm.get('current.client');
+      ctlMixin.checkDirtyBeforeClose(rec,win);
     },
     onAddCabinet: function () {
         var me = this,
@@ -49,14 +60,16 @@ Ext.define('Docs.view.cabinet.CabinetController',{
         var me = this,
             vm = me.getViewModel(),
             cab = vm.get('current.cabinet');
-        console.log(cab);
+        //console.log(cab);
         cab.save({
-            failure: function (record, operation) {
-                Docs.util.Util.showErrorMsg(operation.responseText);
-            },
-            success: function (record, operation) {
-                Docs.util.Util.showToast('Shelf successfully saved.');
-                me.doRefreshTree();
+            callback:  function(record, operation, success) {
+                var result = Docs.util.Util.decodeJSON(operation._response.responseText);
+                if (success) {
+                    Docs.util.Util.showToast('Success! Record saved.');
+                    me.doRefreshTree();
+                } else {
+                    Docs.util.Util.showErrorMsg(result.msg);
+                }
             }
         });
     },
@@ -64,49 +77,85 @@ Ext.define('Docs.view.cabinet.CabinetController',{
         var me = this,
             vm = me.getViewModel(),
             vw = me.getView(),
-            panel = vw.lookupReference('cabinetPanel'),
+            //panel = vw.lookupReference('cabinetPanel'),
             cabId = vm.get('current.cabinet.cabinetId'),
-            form = panel.down('cabinet-row-form'),
-            rec;
-        rec = Ext.create('Docs.model.CabinetRow',{
-            cabinetId : cabId ? cabId : Ext.Number.from(cabNode.getId().split('_')[1]),
-            rowId: null
-        });
+            rec = Ext.create('Docs.model.CabinetRow',{
+                cabinetId : cabId ? cabId : Ext.Number.from(cabNode.getId().split('_')[1]),
+                rowId: null
+            }),
+            win = Ext.create({
+                xtype: 'window',
+                height: 165,
+                width: 400,
+                title: 'New Cabinet Row',
+                iconCls: 'x-fa fa-edit',
+                bodyPadding: '20 20 20 20',
+                items: [
+                    { xtype: 'cabinet-row-form'}
+                ]
+            });
 
         vm.set('current.row',rec);
-        panel.getLayout().setActiveItem(form);
+        vw.add([win]);
+        win.show();
     },
     onSaveRow: function () {
         var me = this,
             vw = me.getView(),
             panel = vw.lookupReference('cabinetPanel'),
-            form = panel.down('cabinet-row-form'),
-            delBtn = form.down('#deleteBtn'),
-            addClientBtn = form.down('#addClientBtn'),
             vm = me.getViewModel(),
             row = vm.get('current.row'),
-            cabinetId = vm.get('current.cabinet.cabinetId');
-            //store = vm.get('cabinetTree');
+            grid = panel.down('row-list');
+            //cabinetId = vm.get('current.cabinet.cabinetId');
         row.save({
-            failure: function (record, operation) {
-                Docs.util.Util.showErrorMsg(operation.responseText);
-            },
-            success: function (record, operation) {
-                Docs.util.Util.showToast('Row successfully saved.');
-                delBtn.enable();
-                addClientBtn.enable();
-                // var nodeId = 'S_' + cabinetId,
-                //     tree = vw.lookupReference('cabinetPanel').up().down('cabinet-tree'),
-                //     parentNode = tree.getNodeById(nodeId);
-                // parentNode.appendChild({
-                //     leaf: true,
-                //     expanded: false,
-                //     text: 'Row x'
-                // });
-                vm.getStore('allCabinetRows').load();
-                me.doRefreshTree();
+            callback: function(record, operation, success) {
+
+                var result = Docs.util.Util.decodeJSON(operation._response.responseText);
+                if (success) {
+                    Docs.util.Util.showToast('Success! Record saved.');
+                    if(record.store === undefined){
+                        grid.getStore().add(record);
+                    }
+                    vm.getStore('allCabinetRows').load();
+                    me.doRefreshTree();
+                    vw.down('window').close();
+                } else {
+                    Docs.util.Util.showErrorMsg(result.msg);
+                }
             }
         });
+    },
+    onRowDblClick: function (grid , record , item , index , e , eOpts) {
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            win = Ext.create({
+                xtype: 'window',
+                height: 165,
+                width: 400,
+                title: 'Edit Row',
+                iconCls: 'x-fa fa-edit',
+                bodyPadding: '20 20 20 20',
+                items: [
+                    { xtype: 'cabinet-row-form'}
+                ]
+            });
+        vw.add([win]);
+        win.show();
+    },
+    onRowDetailClick: function(grid,rowIndex, colIndex){
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            store = vm.getStore('rowClients'),
+            panel = vw.lookupReference('cabinetPanel'),
+            target = panel.down('client-list'),
+            rec = grid.getStore().getAt(rowIndex);
+
+        store.doFindByRow(rec.get('rowId'));
+
+        panel.getLayout().setActiveItem(target);
+
     },
     onAddClient: function (rowNode) {
 
@@ -115,38 +164,139 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             vw = me.getView(),
             panel = vw.lookupReference('cabinetPanel'),
             rowId = vm.get('current.row.rowId'),
-            form = panel.down('client-form'),
-            rec;
-        rec = Ext.create('Docs.model.Client',{
-            rowId : rowId ? rowId : Ext.Number.from(rowNode.getId().split('_')[1]),
-            clientId: null
-        });
-
-        vm.set('current.client',rec);
-        panel.getLayout().setActiveItem(form);
-
+            tab = panel.down('client-tab'),
+            rec,
+            win = Ext.create({
+                xtype: 'window',
+                height: 300,
+                width: 375,
+                title: 'New Client',
+                iconCls: 'x-fa fa-plus',
+                bodyPadding: '20 20 20 20',
+                items: [
+                    { xtype: 'client-form'}
+                ]
+            });
+        if(rowId) {
+            rec = Ext.create('Docs.model.Client', {
+                rowId: rowId ? rowId : Ext.Number.from(rowNode.getId().split('_')[1]),
+                clientId: null
+            });
+            vm.set('current.client',rec);
+            vw.add([win]);
+            win.show();
+        } else {
+            Ext.Msg.alert('Missing field', 'Kindly select a cabinet row before adding a client.');
+        }
     },
     onSaveClient: function () {
         var me = this,
-            //vw = me.getView(),
+            vw = me.getView(),
             vm = me.getViewModel(),
+            panel = vw.lookupReference('cabinetPanel'),
+            grid = panel.down('client-list'),
             client = vm.get('current.client');
-            //cabinetId = vm.get('current.cabinet.cabinetId');
-        //store = vm.get('cabinetTree');
         client.save({
             failure: function (record, operation) {
                 Docs.util.Util.showErrorMsg(operation.responseText);
+                console.log(operation);
             },
             success: function (record, operation) {
                 Docs.util.Util.showToast('Client successfully saved.');
-                // console.log(record);
                 me.doRefreshTree();
+                if(record.store === undefined){
+                    grid.getStore().add(record);
+                }
                 vm.getStore('clients').load();
+                Ext.Msg.confirm('Navigate to client?','Do you wish to navigate to the client management interface?',
+                    function (btn) {
+                        if(btn==='yes'){
+                            panel.getLayout().setActiveItem('client-tab');
+                        }
+                    }
+                );
             }
         });
     },
-    onAddCategory: function(record){
+    onClientDblClick: function (grid , record , item , index , e , eOpts) {
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            win = Ext.create({
+                xtype: 'window',
+                height: 300,
+                width: 375,
+                title: 'Edit Client',
+                iconCls: 'x-fa fa-edit',
+                bodyPadding: '20 20 20 20',
+                items: [
+                    { xtype: 'client-form'}
+                ]
+            });
+        vw.add([win]);
+        win.show();
+    },
+    onAddVolume: function(){
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            rec = Ext.create('Docs.model.Volume',{
+                clientId: vm.get('current.client.clientId')
+            }),
+            win = Ext.create({
+                xtype: 'window',
+                height: 300,
+                width: 450,
+                title: 'New volume',
+                iconCls: 'x-fa fa-object-group',
+                bodyPadding: '20 20 20 20',
+                items: [
+                    { xtype: 'volume-form'}
+                ]
+            });
+        vm.set('current.volume',rec);
+        // Need to load categoryRefs
+        //vm.getStore('categoryRefs').load();
+        vw.add([win]);
+        win.show();
+    },
+    onSaveVolume: function () {
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            panel = vw.lookupReference('con'),
+            rec = vm.get('current.volume');
 
+        rec.save({
+            failure: function (record,operation) {
+                Docs.util.Util.showErrorMsg(operation.responseText);
+            },
+            success: function (record,operation) {
+                Docs.util.Util.showToast('Volume saved successfully.');
+                if(record.store===undefined){
+                    vm.getStore('clientVolumes').add(record);
+                }
+            }
+        });
+
+    },
+    onVolDblClick: function (grid , record , item , index , e , eOpts) {
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            win = Ext.create({
+                xtype: 'window',
+                height: 200,
+                width: 400,
+                title: 'Edit Volume',
+                iconCls: 'x-fa fa-object-group',
+                bodyPadding: '20 20 20 20',
+                items: [
+                    { xtype: 'volume-form'}
+                ]
+            });
+        vw.add([win]);
+        win.show();
     },
     doAfterActivate: function(){
         var me = this,
@@ -166,31 +316,39 @@ Ext.define('Docs.view.cabinet.CabinetController',{
         console.log(recIdSplit);
         if (recIdSplit[0]==='S') {
             var cabinetId = Ext.Number.from(recIdSplit[1]),
+                store = vm.getStore('cabinetRows'),
                 rec = vm.get('cabinets').findRecord('cabinetId',cabinetId),
-                form = panel.down('cabinet-form');
+                target = panel.down('row-list');
             if (!Ext.isEmpty(rec)) {
                 vm.set('current.cabinet',rec);
-                panel.getLayout().setActiveItem(form);
+                store.doFindByCabinet(cabinetId);
+                panel.getLayout().setActiveItem(target);
             }
         } else if (recIdSplit[0]==='R') {
             var rowId = Ext.Number.from(recIdSplit[1]),
+                store = vm.getStore('rowClients'),
                 rec = vm.get('allCabinetRows').findRecord('rowId', rowId),
-                form = panel.down('cabinet-row-form');
-            /*console.log(rec);
-            debugger;*/
+                target = panel.down('client-list');
+            debugger;
+            console.log(vm.get('allCabinetRows'));
             if (!Ext.isEmpty(rec)) {
                 vm.set('current.row', rec);
-                panel.getLayout().setActiveItem(form);
+                store.doFindByRow(rowId);
+                panel.getLayout().setActiveItem(target);
             }
         } else if (recIdSplit[0]==='C') {
             var clientId = Ext.Number.from(recIdSplit[1]),
                 rec = vm.get('clients').findRecord('clientId', clientId),
-                form = panel.down('client-form');
+                store = vm.getStore('volumes'),
+                target = panel.down('client-tab'); //was 'client-form'
             /*console.log(rec);
             debugger;*/
             if (!Ext.isEmpty(rec)) {
                 vm.set('current.client', rec);
-                panel.getLayout().setActiveItem(form);
+                store.load();
+                panel.getLayout().setActiveItem(target);
+                console.info('Showing current client clientId');
+                console.log(vm.get('current.client.clientId'));
             }
         } else {
             console.log('Invalid record selected?');
@@ -231,7 +389,7 @@ Ext.define('Docs.view.cabinet.CabinetController',{
                                 me.onAddClient(record);
                                 break;
                             case 'C':
-                                me.onAddCategory(record);
+                                me.onAddVolume(record);
                                 break;
                             default:
                                 me.onAddCabinet(); // root node

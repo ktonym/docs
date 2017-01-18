@@ -9,7 +9,7 @@ Ext.define('Docs.view.user.UserController',{
         var me = this,
             vw = me.getView(),
             vm = me.getViewModel(),
-            rec = Ext.create('Docs.model.security.Group',{
+            rec = Ext.create('Docs.model.Group',{
                 description: 'Enter brief description here.'
             }),
             win = Ext.create({
@@ -17,6 +17,7 @@ Ext.define('Docs.view.user.UserController',{
                 height: 300,
                 width: 450,
                 title: 'New group',
+                iconCls: 'x-fa fa-group',
                 bodyPadding: '20 20 20 20',
                 items: [
                     { xtype: 'group-form'}
@@ -47,6 +48,9 @@ Ext.define('Docs.view.user.UserController',{
         });
 
     },
+    doDelGroup: function () {
+        Ext.Msg.alert('Not allowed',"Deletion of groups has not been configured yet.");
+    },
     
     onGrpDblClick: function ( grid , record , item , index , e , eOpts) {
         var me = this,
@@ -57,6 +61,7 @@ Ext.define('Docs.view.user.UserController',{
                 height: 300,
                 width: 450,
                 title: 'Edit group',
+                iconCls: 'x-fa fa-group',
                 bodyPadding: '20 20 20 20',
                 items: [
                     { xtype: 'group-form'}
@@ -70,7 +75,7 @@ Ext.define('Docs.view.user.UserController',{
         var me = this,
             vw = me.getView(),
             vm = me.getViewModel(),
-            rec = Ext.create('Docs.model.security.User',{
+            rec = Ext.create('Docs.model.User',{
                 groupId: '{current.group.id}'
             }),
             win = Ext.create({
@@ -78,6 +83,7 @@ Ext.define('Docs.view.user.UserController',{
                 height: 400,
                 width: 450,
                 title: 'New user',
+                iconCls: 'x-fa fa-user',
                 bodyPadding: '20 20 20 20',
                 items: [
                     { xtype: 'user-form'}
@@ -107,6 +113,8 @@ Ext.define('Docs.view.user.UserController',{
             }
         });
     },
+
+
     onUsrDblClick: function (grid , record , item , index , e , eOpts) {
         var me = this,
             vw = me.getView(),
@@ -116,9 +124,71 @@ Ext.define('Docs.view.user.UserController',{
                 height: 400,
                 width: 450,
                 title: 'Edit group',
+                iconCls: 'x-fa fa-user',
                 bodyPadding: '20 20 20 20',
                 items: [
                     { xtype: 'user-form'}
+                ]
+            });
+        vw.add([win]);
+        win.show();
+    },
+
+    doAddCat: function () {
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            rec = Ext.create('Docs.model.Category',{
+            }),
+            win = Ext.create({
+                xtype: 'window',
+                height: 250,
+                width: 400,
+                title: 'New Category',
+                iconCls: 'x-fa fa-object-group',
+                bodyPadding: '20 20 20 20',
+                items: [
+                    { xtype: 'category-form'}
+                ]
+            });
+        vm.set('current.category',rec);
+
+        vw.add([win]);
+        win.show();
+    },
+
+    doSaveCat: function () {
+        var me = this,
+            vm = me.getViewModel(),
+            store = vm.getStore('categories'),
+            rec = vm.get('current.category');
+
+        rec.save({
+            success: function (record,operation) {
+                Docs.util.Util.showToast('Category saved successfully.');
+                if(record.store===undefined){
+                    store.add(record);
+                }
+            },
+            failure: function (record,operation) {
+                Docs.util.Util.showErrorMsg(operation.responseText);
+            }
+        });
+    },
+
+    onCatDblClick: function (grid , record , item , index , e , eOpts) {
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            win = Ext.create({
+                xtype: 'window',
+                height: 250,
+                width: 400,
+                title: 'Edit Category',
+                iconCls: 'x-fa fa-object-group',
+                bodyPadding: '20 20 20 20',
+                items: [
+                    { xtype: 'category-form'}
                 ]
             });
         vw.add([win]);
@@ -132,13 +202,35 @@ Ext.define('Docs.view.user.UserController',{
             vm = me.getViewModel(),
             rec = vm.get('current.group');
 
+        me.checkDirty(rec,win);
+
+    },
+
+    closeUsrWindow: function () {
+        var me = this,
+            vw = me.getView(),
+            win = vw.down('window'),
+            vm = me.getViewModel(),
+            rec = vm.get('current.user');
+        me.checkDirty(rec,win);
+    },
+
+    closeCatWindow: function () {
+        var me = this,
+            vw = me.getView(),
+            win = vw.down('window'),
+            vm = me.getViewModel(),
+            rec = vm.get('current.category');
+        me.checkDirty(rec,win);
+    },
+
+    checkDirty: function (rec,win) {
         if(rec.dirty){
             Ext.Msg.confirm('Revert changes?','The window has unsaved changes, do you want to close and lose them?',
                 function (btn) {
                     if(btn==='yes'){
                         rec.reject();
                         if(win){
-                            //vm.set('current.group',null);
                             win.close();
                         }
                     }
@@ -146,12 +238,11 @@ Ext.define('Docs.view.user.UserController',{
             );
         } else {
             if(win){
-                //vm.set('current.group',null);
                 win.close();
             }
         }
-
     },
+
     onNavTreeSelectionChange: function (tree, node){
        /* if( node && node.get('view')){
             this.redirectTo(node.get("routeId"));

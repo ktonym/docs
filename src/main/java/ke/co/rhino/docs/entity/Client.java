@@ -2,6 +2,7 @@ package ke.co.rhino.docs.entity;
 
 import javax.json.JsonObjectBuilder;
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
     })*/
     private CabinetRow cabinetRow;
     @OneToMany(mappedBy = "client")
-    private Set<Category> categories;
+    private List<Volume> volumes;
 
     public Client() {
     }
@@ -47,7 +48,7 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
         private String email;
         private String pin;
         private CabinetRow cabinetRow;
-        private Set<Category> categories;
+        //private Set<Category> categories;
 
         public ClientBuilder(String clientName) {
             this.clientName = clientName;
@@ -70,11 +71,6 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
 
         public ClientBuilder cabinetRow(CabinetRow cabinetRow){
             this.cabinetRow = cabinetRow;
-            return this;
-        }
-
-        public ClientBuilder categories(Set<Category> categories){
-            this.categories = categories;
             return this;
         }
 
@@ -112,8 +108,8 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
         return cabinetRow;
     }
 
-    public Set<Category> getCategories() {
-        return categories;
+    public List<Volume> getVolumes() {
+        return volumes;
     }
 
     @Override

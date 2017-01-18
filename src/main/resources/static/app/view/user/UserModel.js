@@ -4,9 +4,13 @@
 Ext.define('Docs.view.user.UserModel',{
    extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.user',
-    requires: ['Docs.model.security.Group','Docs.model.security.User'],
+    requires: ['Docs.model.Group','Docs.model.User','Docs.model.Category'],
     data: {},
     stores: {
+        categories: {
+            model: 'Category',
+            autoLoad: true
+        },
         groups: {
             model: 'Group',
             autoLoad: true
@@ -20,15 +24,6 @@ Ext.define('Docs.view.user.UserModel',{
             root: {
                 expanded: true,
                 children: [
-                    {
-                        text: 'Home',
-                        iconCls: 'x-fa fa-home',
-                        children: [{
-                            text: 'Messages',
-                            iconCls: 'x-fa fa-inbox',
-                            leaf: true
-                        }]
-                    },
                     {
                         text: 'Users',
                         iconCls: 'x-fa fa-user',
@@ -57,8 +52,9 @@ Ext.define('Docs.view.user.UserModel',{
                             iconCls: 'x-fa fa-share-alt',
                             leaf: true
                         },{
-                            text: 'Notifications',
-                            iconCls: 'x-fa fa-flag',
+                            text: 'Category Refs',
+                            iconCls: 'x-fa fa-object-group',
+                            routeId: 'categoryList',
                             leaf: true
                         }]
                     }

@@ -25,4 +25,6 @@ public interface IClientService {
     Result<Page<Client>> findByCabinet(Long cabinetId,int page,int size,String actionUsername);
 
     Result<List<Client>> findByRow(CabinetRow row);
+
+    Result<List<Client>> findByRowId(Long rowId, String actionUsername);
 }

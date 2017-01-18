@@ -1,5 +1,5 @@
-Ext.define('Docs.model.security.Group', {
-    extend: 'Docs.model.security.Base',
+Ext.define('Docs.model.Group', {
+    extend: 'Docs.model.Base',
     
     fields: [
         { name: 'id', type: 'int', useNull: true },

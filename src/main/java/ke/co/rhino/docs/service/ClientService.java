@@ -99,16 +99,9 @@ public class ClientService implements IClientService {
 
         }
 
-        if(pin!=null){
-            builder.pin(pin);
-        }
-        if(tel!=null){
-            builder.tel(tel);
-        }
-
-        if(email!=null){
-            builder.email(email);
-        }
+        if(pin!=null) builder.pin(pin);
+        if(tel!=null) builder.tel(tel);
+        if(email!=null) builder.email(email);
 
         Client client = builder.cabinetRow(rowOpt.get()).build();
 
@@ -149,6 +142,26 @@ public class ClientService implements IClientService {
         List<Client> clients = repo.findByCabinetRow(row);
 
         return ResultFactory.getSuccessResult(clients);
+    }
+
+    @Override
+    public Result<List<Client>> findByRowId(Long rowId, String actionUsername) {
+
+
+        if(rowId==null||rowId<1){
+            return ResultFactory.getFailResult("Invalid row ID");
+        }
+        Optional<CabinetRow> rowOpt = cabinetRowRepo.getOne(rowId);
+
+//        rowOpt.ifPresent(cabinetRow -> {
+//
+//        });
+        if(rowOpt.isPresent()){
+            List<Client> clients = repo.findByCabinetRow(rowOpt.get());
+            return ResultFactory.getSuccessResult(clients);
+        }
+
+        return ResultFactory.getFailResult("No such row was found.");
     }
 
 }
