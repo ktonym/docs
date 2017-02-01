@@ -22,4 +22,5 @@ public interface FileRepo extends PagingAndSortingRepository<File,Long> {
     long countByVolume(Volume volume);
     File findByCode(String code);
     List<File> findAll();
+    List<File> findByVolume(Volume volume);
 }

@@ -19,12 +19,8 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
     private String tel;
     private String email;
     private String pin;
-    @ManyToOne
-    /*@JoinColumns({
-            @JoinColumn(name = "rowNumber", referencedColumnName = "rowNumber"),
-            @JoinColumn(name = "cabinetId")
-    })*/
-    private CabinetRow cabinetRow;
+    /*@ManyToOne
+    private CabinetRow cabinetRow;*/
     @OneToMany(mappedBy = "client")
     private List<Volume> volumes;
 
@@ -37,7 +33,7 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
         this.tel = clientBuilder.tel;
         this.email = clientBuilder.email;
         this.pin = clientBuilder.pin;
-        this.cabinetRow = clientBuilder.cabinetRow;
+        //this.cabinetRow = clientBuilder.cabinetRow;
         //this.categories.addAll(clientBuilder.categories.stream().collect(Collectors.toSet()));
     }
 
@@ -47,7 +43,7 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
         private String tel;
         private String email;
         private String pin;
-        private CabinetRow cabinetRow;
+        //private CabinetRow cabinetRow;
         //private Set<Category> categories;
 
         public ClientBuilder(String clientName) {
@@ -69,10 +65,10 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
             return this;
         }
 
-        public ClientBuilder cabinetRow(CabinetRow cabinetRow){
+        /*public ClientBuilder cabinetRow(CabinetRow cabinetRow){
             this.cabinetRow = cabinetRow;
             return this;
-        }
+        }*/
 
         public Client build(){
             return new Client(this);
@@ -104,9 +100,9 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
         return pin;
     }
 
-    public CabinetRow getCabinetRow() {
+    /*public CabinetRow getCabinetRow() {
         return cabinetRow;
-    }
+    }*/
 
     public List<Volume> getVolumes() {
         return volumes;
@@ -124,6 +120,6 @@ public class Client extends AbstractEntity implements EntityItem<Long>{
                 .add("tel",tel == null ? "" : tel)
                 .add("email",email == null ? "" : email)
                 .add("pin",pin == null ? "" : pin);
-        cabinetRow.addJson(builder);
+        //cabinetRow.addJson(builder);
     }
 }

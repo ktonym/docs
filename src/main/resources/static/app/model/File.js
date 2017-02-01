@@ -5,11 +5,21 @@ Ext.define('Docs.model.File', {
         { name: 'fileId', type: 'int', useNull:true },
         { name: 'code', type: 'string' },
         { name: 'status', type: 'string' },
-        { name: 'location', type: 'string'},
-        { name: 'fileDesc', type: 'string'},
-        { name: 'date', type: 'date', dateFormat: 'Ymd'},
-        { name: 'volumeId', type: 'int', reference: 'Volume'},
-        { name: 'categoryId', type: 'int', reference: 'Category'}
+        { name: 'location', type: 'string' },
+        { name: 'fileDesc', type: 'string' },
+        { name: 'date', type: 'date', dateFormat: 'Ymd' },
+        { name: 'volumeId', type: 'int', reference: 'Volume' },
+        { name: 'categoryId', type: 'int', reference: 'Category' },
+        { name: 'volumeNo', type: 'string', persist: false
+            //,convert: function(v,record){
+            //    return record.data.volume.volumeNo;
+            //}
+        },
+        { name: 'name', type: 'string', persist: false
+            //,convert: function(v,record){
+            //    return record.data.category.name;
+            //}
+        }
     ],
     validators: {
         date:[{ type: 'presence', message: 'This field is mandatory' }],

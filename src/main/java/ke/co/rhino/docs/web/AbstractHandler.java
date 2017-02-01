@@ -13,6 +13,7 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Stream;
@@ -24,12 +25,14 @@ public abstract class AbstractHandler {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    static final DateTimeFormatter YEAR_FORMAT_yyyy = DateTimeFormatter.ofPattern("yyyy");
     static final DateTimeFormatter DATE_FORMAT_yyyyMMdd =  DateTimeFormatter.ofPattern("yyyyMMdd");
     static final DateTimeFormatter DATE_FORMAT_yyyyMMddHHmm = DateTimeFormatter.ofPattern("yyyyMMdd HH:mm");
 
     @InitBinder
     public void initBinder(WebDataBinder binder){
 
+//        binder.registerCustomEditor(Year.class, new LocalDateTimeEditor(YEAR_FORMAT_yyyy),true);
         binder.registerCustomEditor(LocalDate.class,new LocalDateEditor(DATE_FORMAT_yyyyMMdd,true));
         binder.registerCustomEditor(LocalDateTime.class, new LocalDateTimeEditor(DATE_FORMAT_yyyyMMddHHmm,true));
 

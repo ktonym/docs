@@ -3,8 +3,8 @@ Ext.define('Docs.view.cabinet.CabinetModel',{
 
     extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.cabinet',
-    requires: ['Docs.model.Cabinet','Docs.model.CabinetRow','Docs.store.CabinetRow',
-        'Docs.store.RowClients','Docs.model.Client','Docs.model.Volume'],
+    requires: ['Docs.model.Cabinet','Docs.model.CabinetRow','Docs.store.CabinetRow','Docs.model.Category',
+        'Docs.store.RowClients','Docs.store.ClientVolumes','Docs.model.Client','Docs.model.Volume'],
     data: {},
     stores:{
 
@@ -54,20 +54,12 @@ Ext.define('Docs.view.cabinet.CabinetModel',{
             autoLoad: true
         },
         clientVolumes: {
-            model: 'Volume',
-            autoLoad: false,
-            proxy: {
-                type: 'ajax',
-                url: '/volume/findByClient',
-                extraParams: {
-                    clientId: '{current.client.clientId}'
-                }
-            }
-        }
-        /*,categories: {
+            type: 'client-volumes'
+        },
+        categories: {
             model: 'Category',
             autoLoad: true
-        }*/
+        }
     },
     formulas: {
         currentCabinet: {

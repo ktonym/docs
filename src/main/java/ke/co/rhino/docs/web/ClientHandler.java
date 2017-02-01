@@ -37,11 +37,11 @@ public class ClientHandler extends AbstractHandler {
         String tel = jsonObject.getString("tel");
         String pin = jsonObject.getString("pin");
         String email = jsonObject.getString("email");
-        Long rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
+        //Long rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
 
         Optional<Long> clientIdOpt = Optional.empty();
 
-        Result<Client> ar = clientService.store(clientIdOpt,clientName,rowId,tel,email,pin,"AKipkoech");
+        Result<Client> ar = clientService.store(clientIdOpt,clientName,tel,email,pin,"AKipkoech");
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
         } else {
@@ -61,7 +61,7 @@ public class ClientHandler extends AbstractHandler {
         String tel = jsonObject.getString("tel");
         String pin = jsonObject.getString("pin");
         String email = jsonObject.getString("email");
-        Long rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
+        //Long rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
 
         Long clientId;
         Optional<Long> clientIdOpt;
@@ -69,7 +69,7 @@ public class ClientHandler extends AbstractHandler {
         clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
         clientIdOpt = Optional.of(clientId);
 
-        Result<Client> ar = clientService.store(clientIdOpt,clientName,rowId,tel,email,pin,"AKipkoech");
+        Result<Client> ar = clientService.store(clientIdOpt,clientName,tel,email,pin,"AKipkoech");
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
         } else {
@@ -89,18 +89,5 @@ public class ClientHandler extends AbstractHandler {
         }
     }
 
-    @RequestMapping(value = "/findByRow", method = RequestMethod.GET, produces = {"application/json"})
-    @ResponseBody
-    public String findByRow(HttpServletRequest request, @RequestParam(value = "rowId") String rowIdStr){
-
-        Long rowId = Long.valueOf(rowIdStr);
-
-        Result<List<Client>> ar = clientService.findByRowId(rowId, "Akipkoech");
-        if(ar.isSuccess()){
-            return getJsonSuccessData(ar.getData());
-        } else {
-            return getJsonErrorMsg(ar.getMsg());
-        }
-    }
 
 }

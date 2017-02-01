@@ -197,24 +197,25 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             grid = panel.down('client-list'),
             client = vm.get('current.client');
         client.save({
-            failure: function (record, operation) {
-                Docs.util.Util.showErrorMsg(operation.responseText);
-                console.log(operation);
-            },
-            success: function (record, operation) {
-                Docs.util.Util.showToast('Client successfully saved.');
-                me.doRefreshTree();
-                if(record.store === undefined){
-                    grid.getStore().add(record);
-                }
-                vm.getStore('clients').load();
-                Ext.Msg.confirm('Navigate to client?','Do you wish to navigate to the client management interface?',
-                    function (btn) {
-                        if(btn==='yes'){
-                            panel.getLayout().setActiveItem('client-tab');
-                        }
+            callback:  function(record, operation, success) {
+                var result = Docs.util.Util.decodeJSON(operation._response.responseText);
+                if (success) {
+                    Docs.util.Util.showToast('Client successfully saved.');
+                    me.doRefreshTree();
+                    if(record.store === undefined){
+                        grid.getStore().add(record);
                     }
-                );
+                    vm.getStore('clients').load();
+                    Ext.Msg.confirm('Navigate to client?','Do you wish to navigate to the client management interface?',
+                        function (btn) {
+                            if(btn==='yes'){
+                                panel.getLayout().setActiveItem('client-tab');
+                            }
+                        }
+                    );
+                } else {
+                    Docs.util.Util.showErrorMsg(result.msg);
+                }
             }
         });
     },
@@ -236,6 +237,19 @@ Ext.define('Docs.view.cabinet.CabinetController',{
         vw.add([win]);
         win.show();
     },
+    onClientDetailClick: function(grid,rowIndex, colIndex){
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            store = vm.getStore('clientVolumes'),
+            panel = vw.lookupReference('cabinetPanel'),
+            target = panel.down('client-tab'),
+            rec = grid.getStore().getAt(rowIndex);
+
+        store.doFindByClient(rec.get('clientId'));
+
+        panel.getLayout().setActiveItem(target);
+    },
     onAddVolume: function(){
         var me = this,
             vw = me.getView(),
@@ -245,10 +259,10 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             }),
             win = Ext.create({
                 xtype: 'window',
-                height: 300,
-                width: 450,
+                height: 220,
+                width: 400,
                 title: 'New volume',
-                iconCls: 'x-fa fa-object-group',
+                iconCls: 'x-fa fa-plus',
                 bodyPadding: '20 20 20 20',
                 items: [
                     { xtype: 'volume-form'}
@@ -268,13 +282,15 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             rec = vm.get('current.volume');
 
         rec.save({
-            failure: function (record,operation) {
-                Docs.util.Util.showErrorMsg(operation.responseText);
-            },
-            success: function (record,operation) {
-                Docs.util.Util.showToast('Volume saved successfully.');
-                if(record.store===undefined){
-                    vm.getStore('clientVolumes').add(record);
+            callback:  function(record, operation, success) {
+                var result = Docs.util.Util.decodeJSON(operation._response.responseText);
+                if (success) {
+                    Docs.util.Util.showToast('Volume saved successfully.');
+                    if(record.store===undefined){
+                        vm.getStore('clientVolumes').add(record);
+                    }
+                } else {
+                    Docs.util.Util.showErrorMsg(result.msg);
                 }
             }
         });
@@ -286,13 +302,77 @@ Ext.define('Docs.view.cabinet.CabinetController',{
             vm = me.getViewModel(),
             win = Ext.create({
                 xtype: 'window',
-                height: 200,
+                height: 220,
                 width: 400,
                 title: 'Edit Volume',
-                iconCls: 'x-fa fa-object-group',
+                iconCls: 'x-fa fa-edit',
                 bodyPadding: '20 20 20 20',
                 items: [
                     { xtype: 'volume-form'}
+                ]
+            });
+        vw.add([win]);
+        win.show();
+    },
+    onAddFile: function(){
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            rec = Ext.create('Docs.model.File',{
+                volumeId: vm.get('current.volume.volumeId')
+            }),
+            win = Ext.create({
+                xtype: 'window',
+                height: 400,
+                width: 400,
+                title: 'New File',
+                iconCls: 'x-fa fa-plus',
+                bodyPadding: '20 20 20 20',
+                items: [
+                    { xtype: 'file-form'}
+                ]
+            });
+        vm.set('current.file',rec);
+        // Need to load categoryRefs
+        //vm.getStore('categoryRefs').load();
+        vw.add([win]);
+        win.show();
+    },
+    doSaveFile: function(){
+
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            //panel = vw.lookupReference('con'),
+            rec = vm.get('current.file');
+
+        rec.save({
+            callback:  function(record, operation, success) {
+                var result = Docs.util.Util.decodeJSON(operation._response.responseText);
+                if (success) {
+                    Docs.util.Util.showToast('File saved successfully.');
+                    if(record.store===undefined){
+                        vm.getStore('volumeFiles').add(record);
+                    }
+                } else {
+                    Docs.util.Util.showErrorMsg(result.msg);
+                }
+            }
+        });
+    },
+    onFileDblClick: function(){
+        var me = this,
+            vw = me.getView(),
+            vm = me.getViewModel(),
+            win = Ext.create({
+                xtype: 'window',
+                height: 400,
+                width: 400,
+                title: 'Edit File',
+                iconCls: 'x-fa fa-edit',
+                bodyPadding: '20 20 20 20',
+                items: [
+                    { xtype: 'file-form'}
                 ]
             });
         vw.add([win]);

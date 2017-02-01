@@ -23,5 +23,5 @@ public interface IFileService {
                         String location, String actionUsername);
     Result<List<File>> findAll(String actionUsername);
     Result<File> remove(Long fileId, String actionUsername);
-
+    Result<List<File>> findByVolume(Long volumeId, String actionUsername);
 }

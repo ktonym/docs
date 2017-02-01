@@ -4,6 +4,21 @@
 Ext.define('Docs.view.user.UserController',{
     extend: 'Ext.app.ViewController',
     alias: 'controller.user',
+
+    onGroupSelect: function(id){
+        var me = this,
+            vm = me.getViewModel(),
+            grid = me.lookupReference('groupList'),
+            store = vm.getStore('groups'),
+            record = store.findRecord('id',id);
+        if(record){
+            grid.getSelectionModel().select(record);
+        }
+    },
+
+    onGroupItemClick: function(view,record,item,index,e,eOpts){
+        this.redirectTo('groups/',+record.get('id'));
+    },
     
     doAddGroup: function () {
         var me = this,

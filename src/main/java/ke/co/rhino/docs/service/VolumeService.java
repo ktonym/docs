@@ -1,7 +1,9 @@
 package ke.co.rhino.docs.service;
 
+import ke.co.rhino.docs.entity.CabinetRow;
 import ke.co.rhino.docs.entity.Client;
 import ke.co.rhino.docs.entity.Volume;
+import ke.co.rhino.docs.repo.CabinetRowRepo;
 import ke.co.rhino.docs.repo.ClientRepo;
 import ke.co.rhino.docs.repo.FileRepo;
 import ke.co.rhino.docs.repo.VolumeRepo;
@@ -28,13 +30,19 @@ public class VolumeService implements IVolumeService {
     @Autowired
     private VolumeRepo repo;
     @Autowired
+    private CabinetRowRepo rowRepo;
+    @Autowired
     private ClientRepo clientRepo;
     @Autowired
     private FileRepo fileRepo;
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<Volume> create(Long clientId,Integer volumeNo, Year year, String actionUsername) {
+    public Result<Volume> create(Long rowId,Long clientId,Integer volumeNo, Year year, String actionUsername) {
+
+        if(rowId == null || rowId<1){
+            return ResultFactory.getFailResult("Invalid row ID supplied. Cannot save volume.");
+        }
 
         if (clientId == null||clientId<1) {
             return ResultFactory.getFailResult("Invalid client ID supplied. Cannot save volume.");
@@ -45,24 +53,38 @@ public class VolumeService implements IVolumeService {
 
         if (year==null) year = Year.now();
 
-        Optional<Client> clientOpt = clientRepo.getOne(clientId);
+        Optional<CabinetRow> rowOpt = rowRepo.getOne(rowId);
+        if(rowOpt.isPresent()){
+            CabinetRow row = rowOpt.get();
 
-        if (clientOpt.isPresent()) {
-            Client client = clientOpt.get();
-            if(repo.findByClientAndVolumeNo(client,volumeNo).isPresent()){
-                return ResultFactory.getFailResult("Volume number already exists. Kindly provide a different volume number.");
+            Optional<Client> clientOpt = clientRepo.getOne(clientId);
+            if (clientOpt.isPresent()) {
+                Client client = clientOpt.get();
+                if(repo.findByClientAndVolumeNo(client,volumeNo).isPresent()){
+                    return ResultFactory.getFailResult("Volume number already exists. Kindly provide a different volume number.");
+                }
+                Volume vol = new Volume.VolumeBuilder(volumeNo).cabinetRow(row).client(client).year(year).build();
+                repo.save(vol);
+                return ResultFactory.getSuccessResult(vol);
+            } else {
+                return ResultFactory.getFailResult("No client with ID [" + clientId + "] was found. Cannot save volume.");
             }
-            Volume vol = new Volume.VolumeBuilder(volumeNo).client(client).year(year).build();
-            repo.save(vol);
-            return ResultFactory.getSuccessResult(vol);
+
+
         } else {
-            return ResultFactory.getFailResult("No client with ID [" + clientId + "] was found. Cannot save volume.");
+            return ResultFactory.getFailResult("No row with ID ["+rowId+"] was found. Cannot save volume.");
         }
+
+
     }
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<Volume> update(Long volumeId, Long clientId, Integer volumeNo, Year year, String actionUsername) {
+    public Result<Volume> update(Long rowId,Long volumeId, Long clientId, Integer volumeNo, Year year, String actionUsername) {
+
+        if(rowId == null || rowId<1){
+            return ResultFactory.getFailResult("Invalid row ID supplied. Cannot update volume.");
+        }
 
         if(volumeId==null||volumeId<1){
             return ResultFactory.getFailResult("Invalid volume ID. Cannot update volume.");
@@ -86,7 +108,12 @@ public class VolumeService implements IVolumeService {
             return ResultFactory.getFailResult("No client with ID ["+clientId+"] was found. Cannot update volume.");
         }
 
-        Volume vol = new Volume.VolumeBuilder(volumeNo).client(clientOpt.get()).year(year).volumeId(volumeId).build();
+        Optional<CabinetRow> rowOpt = rowRepo.getOne(rowId);
+        if(!rowOpt.isPresent()){
+            return ResultFactory.getFailResult("No row with ID ["+rowId+"] was found. Cannot update volume.");
+        }
+
+        Volume vol = new Volume.VolumeBuilder(volumeNo).cabinetRow(rowOpt.get()).client(clientOpt.get()).year(year).volumeId(volumeId).build();
 
         return ResultFactory.getSuccessResult(vol);
     }
@@ -138,4 +165,25 @@ public class VolumeService implements IVolumeService {
         String msg = "Volume with ID ".concat(volumeId.toString()).concat(" deleted by ").concat(actionUsername);
         return ResultFactory.getSuccessResult(msg);
     }
+
+    @Override
+    public Result<List<Volume>> findByRowId(Long rowId, String actionUsername) {
+
+
+        if(rowId==null||rowId<1){
+            return ResultFactory.getFailResult("Invalid row ID");
+        }
+        Optional<CabinetRow> rowOpt = rowRepo.getOne(rowId);
+
+        //        rowOpt.ifPresent(cabinetRow -> {
+        //
+        //        });
+        if(rowOpt.isPresent()){
+            Optional<List<Volume>> volumesOpt = repo.findByCabinetRow(rowOpt.get());
+            return ResultFactory.getSuccessResult(volumesOpt.get());
+        }
+
+        return ResultFactory.getFailResult("No such row was found.");
+    }
+
 }

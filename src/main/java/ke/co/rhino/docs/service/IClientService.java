@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public interface IClientService {
 
-    Result<Client> store(Optional<Long> clientId, String clientName, Long rowId,
+    Result<Client> store(Optional<Long> clientId, String clientName, /*Long rowId,*/
                          String tel, String email, String pin, String actionUsername);
 
     Result<Client> remove(Long clientId,String actionUsername);
@@ -22,9 +22,9 @@ public interface IClientService {
 
     Result<List<Client>> findEverything(String actionUsername);
 
-    Result<Page<Client>> findByCabinet(Long cabinetId,int page,int size,String actionUsername);
+    //Result<Page<Client>> findByCabinet(Long cabinetId,int page,int size,String actionUsername);
 
-    Result<List<Client>> findByRow(CabinetRow row);
+    //Result<List<Client>> findByRow(CabinetRow row);
 
-    Result<List<Client>> findByRowId(Long rowId, String actionUsername);
+    //Result<List<Client>> findByRowId(Long rowId, String actionUsername);
 }

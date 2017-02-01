@@ -6,6 +6,7 @@ import ke.co.rhino.docs.entity.CabinetRowId;
 import ke.co.rhino.docs.repo.CabinetRepo;
 import ke.co.rhino.docs.repo.CabinetRowRepo;
 import ke.co.rhino.docs.repo.ClientRepo;
+import ke.co.rhino.docs.repo.VolumeRepo;
 import ke.co.rhino.docs.vo.Result;
 import ke.co.rhino.docs.vo.ResultFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class CabinetRowService implements ICabinetRowService {
     @Autowired
     private CabinetRepo cabinetRepo;
     @Autowired
-    private ClientRepo clientRepo;
+    private VolumeRepo volumeRepo;
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
@@ -127,8 +128,8 @@ public class CabinetRowService implements ICabinetRowService {
         Optional<CabinetRow> rowOpt = repo.getOne(cabinetRowId);
 
         if(rowOpt.isPresent()){ // proceed to verify there are no child records
-            long clients = clientRepo.countByCabinetRow(rowOpt.get());
-            if(clients>0){
+            long volumes = volumeRepo.countByCabinetRow(rowOpt.get());
+            if(volumes>0){
                 ResultFactory.getFailResult("Cannot delete cabinet row. Clients do exist. Please migrate the clients to another row before removing this row.");
             }
             repo.delete(cabinetRowId);

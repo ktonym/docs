@@ -24,12 +24,14 @@ Ext.define('Docs.view.cabinet.VolumeList',{
             flex: 2
         },
         {
+            xtype: 'datecolumn',
+            format: 'Y',
             dataIndex: 'year',
             text: 'Year',
             flex: 3
         }
     ],
-    tbar: {
+    bbar: {
         overflowHandler: 'menu',
         items: [
             '->',

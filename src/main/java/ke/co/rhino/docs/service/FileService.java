@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +59,7 @@ public class FileService implements IFileService {
         }
 
         if(status==null){
-            status = FileStatus.ACTIVE;
+            status = FileStatus.OPEN;
         }
 
         if(code==null){
@@ -144,6 +145,24 @@ public class FileService implements IFileService {
             return ResultFactory.getSuccessResult(msg);
         }
 
-        return ResultFactory.getFailResult("No file with ID was found in the system. Cannot delete.");
+        return ResultFactory.getFailResult("No file with ID["+fileId+"] was found in the system. Cannot delete.");
+    }
+
+    @Override
+    public Result<List<File>> findByVolume(Long volumeId, String actionUsername) {
+
+        if(volumeId==null||volumeId<1){
+            return ResultFactory.getFailResult("Invalid volume ID provided.");
+        }
+
+        Optional<Volume> volumeOpt = volumeRepo.getOne(volumeId);
+
+        //new ArrayList<>();
+
+        if(volumeOpt.isPresent()){
+            List<File> fileList = repo.findByVolume(volumeOpt.get());
+            return ResultFactory.getSuccessResult(fileList);
+        }
+        return ResultFactory.getFailResult("Invalid volume ID provided.");
     }
 }

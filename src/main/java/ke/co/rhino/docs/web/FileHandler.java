@@ -101,5 +101,19 @@ public class FileHandler extends AbstractHandler {
         }
     }
 
+    @RequestMapping(value = "/findByVolume", method = RequestMethod.GET, produces = {"application/json"})
+    @ResponseBody
+    public String findByVolume(@RequestParam("volumeId") String volumeIdStr, HttpServletRequest request){
+
+        Long volumeId = Long.getLong(volumeIdStr);
+        Result<List<File>> ar = fileService.findByVolume(volumeId,"akipkoech");
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
+
+    }
+
 
 }

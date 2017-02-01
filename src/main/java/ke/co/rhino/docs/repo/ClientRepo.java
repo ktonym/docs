@@ -17,13 +17,11 @@ import java.util.Set;
  */
 public interface ClientRepo extends PagingAndSortingRepository<Client,Long> {
 
-    long countByCabinetRow(CabinetRow row);
+
     Optional<Client> getOne(Long clientId);
     Optional<Client> findByPin(String pin);
     Optional<Client> findByClientName(String clientName);
     Optional<Page<Client>> findByClientNameLike(String searchStr, Pageable pageable);
-    List<Client> findByCabinetRow(CabinetRow row);
-
     @Query("SELECT c FROM Client c")
     List<Client> getAll();
 

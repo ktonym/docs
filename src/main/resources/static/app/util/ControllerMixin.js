@@ -11,7 +11,7 @@ Ext.define('Docs.util.ControllerMixin',{
     saveRecord: function(record){
         record.save({
             callback:  function(record, operation, success) {
-                var result = Docs.util.Util.decodeJSON(operation.responseText);
+                var result = Docs.util.Util.decodeJSON(operation._response.responseText);
                 if (success) {
                     Docs.util.Util.showToast('Success! Record saved.');
                     //me.onCancel();

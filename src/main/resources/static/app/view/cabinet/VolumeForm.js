@@ -29,6 +29,7 @@ Ext.define('Docs.view.cabinet.VolumeForm',{
             fieldLabel: 'Year',
             xtype: 'datefield',
             name: 'year',
+            dateFormat: 'Y',
             bind: '{current.volume.year}'
         }
         /*{

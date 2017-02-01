@@ -36,7 +36,7 @@ public class CabinetHandler extends AbstractHandler {
     @Autowired
     private IClientService clientService;
 
-    @RequestMapping(value = "/tree", method = RequestMethod.GET, produces = {"application/json"})
+    /*@RequestMapping(value = "/tree", method = RequestMethod.GET, produces = {"application/json"})
     @ResponseBody
     public String getTree(){
         String actionUsername = "akipkoech";
@@ -118,18 +118,18 @@ public class CabinetHandler extends AbstractHandler {
         if(obj instanceof Cabinet){
             id = "S_" + obj.getId();
         }else if (obj instanceof CabinetRow){
-            /*StringBuilder builder = new StringBuilder("R_").append(((CabinetRow) obj).getCabinet().getCabinetId())
-                    .append(":").append(((CabinetRow) obj).getRowNumber().toString()); // + obj.getId();
-            id = builder.toString();*/
+//            StringBuilder builder = new StringBuilder("R_").append(((CabinetRow) obj).getCabinet().getCabinetId())
+//                    .append(":").append(((CabinetRow) obj).getRowNumber().toString()); // + obj.getId();
+//            id = builder.toString();
             id = "R_" + obj.getId();
         }else if (obj instanceof Client){
             id = "C_" + obj.getId();
         }
 
         return id;
-    }
+    }*/
 
-    @RequestMapping(value="/treenode", method=RequestMethod.GET, produces = {"application/json"})
+   /* @RequestMapping(value="/treenode", method=RequestMethod.GET, produces = {"application/json"})
     @ResponseBody
     public String getCompanyTreeNode(
             @RequestParam(value = "node", required = true) String node,
@@ -187,10 +187,10 @@ public class CabinetHandler extends AbstractHandler {
 
         } else if(node.startsWith("R")){
             String[] idSplit = node.split("_");
-            /*String[] rowIdSplit = idSplit[1].split(":");
-            Long cabinetId = Long.valueOf(rowIdSplit[0].toString());
-            Long rowNum = Long.valueOf(rowIdSplit[1].toString());
-            Cabinet cab = service.find(cabinetId).getData();*/
+            //String[] rowIdSplit = idSplit[1].split(":");
+            //Long cabinetId = Long.valueOf(rowIdSplit[0].toString());
+            //Long rowNum = Long.valueOf(rowIdSplit[1].toString());
+            //Cabinet cab = service.find(cabinetId).getData();
             Long rowId = Long.parseLong(idSplit[1]);
             CabinetRow row = cabinetRowService.find(rowId).getData();
             List<Client> clients = clientService.findByRow(row).getData();
@@ -213,7 +213,7 @@ public class CabinetHandler extends AbstractHandler {
 
         return toJsonString(builder.build());
 
-    }
+    }*/
 
     @RequestMapping(value = "/create", method = RequestMethod.POST, produces = {"application/json"})
     @ResponseBody

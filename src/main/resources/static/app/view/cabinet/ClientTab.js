@@ -5,7 +5,7 @@ Ext.define('Docs.view.cabinet.ClientTab',{
     extend: 'Ext.tab.Panel',
     alias: 'widget.client-tab',
     reference: 'clientTab',
-    requires: ['Docs.view.cabinet.VolumeForm','Docs.view.cabinet.VolumeList'/*,'Docs.view.cabinet.FileList'*/],
+    requires: ['Docs.view.cabinet.VolumeForm','Docs.view.cabinet.VolumeList','Docs.view.cabinet.FileList','Docs.view.cabinet.FileForm'],
     headerPosition: 'Bottom',
     items:[
         {
@@ -16,9 +16,8 @@ Ext.define('Docs.view.cabinet.ClientTab',{
             title: 'Reports',
             bind: {
                 disabled: '{!volumeList.selection}'
-            }
-
-            //xtype: 'file-list'
+            },
+            xtype: 'file-list'
         }
     ]
 });

@@ -36,31 +36,7 @@ public class ClientService implements IClientService {
 
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public Result<Client> store(Optional<Long> clientIdOpt, String clientName, Long rowId, String tel, String email, String pin, String actionUsername) {
-
-        /*if (cabinetId==null||cabinetId<1){
-            return ResultFactory.getFailResult("Invalid cabinet ID provided.");
-        }
-
-        Optional<Cabinet> cabinetOptional = cabinetRepo.getOne(cabinetId);
-        if (!cabinetOptional.isPresent()) {
-            return ResultFactory.getFailResult("No cabinet with ID ["+cabinetId+"] was found.");
-        }
-
-        Cabinet cabinet = cabinetOptional.get();
-
-        if(rowNo==null||rowNo<1){
-            return ResultFactory.getFailResult("Invalid row number provided. Cannot ADD/MODIFY a client.");
-        }*/
-        if(rowId==null||rowId<1){
-            return ResultFactory.getFailResult("Invalid row ID provided. Cannot ADD/MODIFY a client.");
-        }
-
-        Optional<CabinetRow> rowOpt = cabinetRowRepo.getOne(rowId);
-
-        if(!rowOpt.isPresent()){
-            return ResultFactory.getFailResult("No row with provided ID exists in the system. Cannot ADD/MODIFY a client.");
-        }
+    public Result<Client> store(Optional<Long> clientIdOpt, String clientName, String tel, String email, String pin, String actionUsername) {
 
         Client.ClientBuilder builder = new Client.ClientBuilder(clientName);
 
@@ -103,7 +79,7 @@ public class ClientService implements IClientService {
         if(tel!=null) builder.tel(tel);
         if(email!=null) builder.email(email);
 
-        Client client = builder.cabinetRow(rowOpt.get()).build();
+        Client client = builder.build();
 
         repo.save(client);
 
@@ -129,22 +105,22 @@ public class ClientService implements IClientService {
         return ResultFactory.getSuccessResult(clients);
     }
 
-    @Override
+    /*@Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Result<Page<Client>> findByCabinet(Long cabinetId, int page, int size, String actionUsername) {
         return null;
-    }
+    }*/
 
-    @Override
+    /*@Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Result<List<Client>> findByRow(CabinetRow row){
 
         List<Client> clients = repo.findByCabinetRow(row);
 
         return ResultFactory.getSuccessResult(clients);
-    }
+    }*/
 
-    @Override
+    /*@Override
     public Result<List<Client>> findByRowId(Long rowId, String actionUsername) {
 
 
@@ -153,15 +129,15 @@ public class ClientService implements IClientService {
         }
         Optional<CabinetRow> rowOpt = cabinetRowRepo.getOne(rowId);
 
-//        rowOpt.ifPresent(cabinetRow -> {
-//
-//        });
+        //        rowOpt.ifPresent(cabinetRow -> {
+        //
+        //        });
         if(rowOpt.isPresent()){
             List<Client> clients = repo.findByCabinetRow(rowOpt.get());
             return ResultFactory.getSuccessResult(clients);
         }
 
         return ResultFactory.getFailResult("No such row was found.");
-    }
+    }*/
 
 }

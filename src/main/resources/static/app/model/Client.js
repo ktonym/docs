@@ -6,8 +6,8 @@ Ext.define('Docs.model.Client', {
         {name: 'clientName', type: 'string'},
         {name: 'tel', type: 'string'},
         {name: 'pin', type: 'string'},
-        {name: 'email', type: 'string'},
-        {
+        {name: 'email', type: 'string'}
+        /*,{
             name: 'cabinet', type: 'string', persist: false,
             convert: function (v, rec) {
                 var data = rec.data;
@@ -15,7 +15,7 @@ Ext.define('Docs.model.Client', {
                     return data.cabinetNo;
                 }
             }
-        }
+        }*/
     ],
     validators: {
         email: [

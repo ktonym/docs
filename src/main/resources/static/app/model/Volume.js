@@ -8,7 +8,8 @@ Ext.define('Docs.model.Volume',{
         { name: 'volumeId', type: 'int', useNull: true},
         { name: 'volumeNo', type: 'int'},
         { name: 'year', type: 'date', dateFormat: 'Y'},
-        { name: 'clientId', type: 'int', reference: 'Client'}
+        { name: 'clientId', type: 'int', reference: 'Client'},
+        { name: 'rowId', type: 'int', reference: 'CabinetRow'}
     ],
 
     validators: {

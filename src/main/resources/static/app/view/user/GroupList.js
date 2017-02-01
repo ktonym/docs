@@ -12,7 +12,9 @@ Ext.define('Docs.view.user.GroupList',{
         selection: '{current.group}'
     },
     listeners: {
-        itemdblclick: 'onGrpDblClick'
+        itemdblclick: 'onGrpDblClick',
+        itemclick: 'onGroupItemClick',
+        selectGroup: 'onGroupSelect'
     },
     bbar: {
         overflowHandler: 'menu',

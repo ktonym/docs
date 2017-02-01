@@ -22,7 +22,7 @@ public class CabinetRow extends AbstractEntity implements EntityItem<Long>{
     @JoinColumn(name = "CABINET")
     private Cabinet cabinet;
     @OneToMany(mappedBy = "cabinetRow")
-    private Set<Client> clients;
+    private Set<Volume> volumes;
 
     public CabinetRow() {
     }
@@ -31,7 +31,6 @@ public class CabinetRow extends AbstractEntity implements EntityItem<Long>{
         this.cabinetRowId = cabinetRowBuilder.rowId;
         this.rowNumber = cabinetRowBuilder.rowNumber;
         this.cabinet = cabinetRowBuilder.cabinet;
-       // clients.addAll((cabinetRowBuilder.clients).stream().collect(Collectors.toSet()));
     }
 
     public static class CabinetRowBuilder{
@@ -39,7 +38,6 @@ public class CabinetRow extends AbstractEntity implements EntityItem<Long>{
         private Long rowId;
         private Long rowNumber;
         private Cabinet cabinet;
-        private Set<Client> clients;
 
         public CabinetRowBuilder() {
         }
@@ -56,11 +54,6 @@ public class CabinetRow extends AbstractEntity implements EntityItem<Long>{
 
         public CabinetRowBuilder rowNumber(Long rowNumber){
             this.rowNumber = rowNumber;
-            return this;
-        }
-
-        public CabinetRowBuilder clients(Set<Client> clients){
-            this.clients = clients;
             return this;
         }
 
@@ -82,8 +75,8 @@ public class CabinetRow extends AbstractEntity implements EntityItem<Long>{
         return cabinetRowId;
     }
 
-    public Set<Client> getClients() {
-        return clients;
+    public Set<Volume> getVolumes() {
+        return volumes;
     }
 
     @Override

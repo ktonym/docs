@@ -12,9 +12,11 @@ import java.util.List;
  */
 public interface IVolumeService  {
 
-    Result<Volume> create(Long clientId,Integer volumeNo, Year year, String actionUsername);
-    Result<Volume> update(Long volumeId, Long clientId, Integer volumeNo, Year year, String actionUsername);
+    Result<Volume> create(Long rowId, Long clientId,Integer volumeNo, Year year, String actionUsername);
+    Result<Volume> update(Long rowId, Long volumeId, Long clientId, Integer volumeNo, Year year, String actionUsername);
     Result<Page<Volume>> findAll(int page, int size, String actionUsername);
     Result<List<Volume>> findByClient(Long clientId, String actionUsername);
     Result<Volume> remove(Long volumeId, String actionUsername);
+
+    Result<List<Volume>> findByRowId(Long rowId, String akipkoech);
 }

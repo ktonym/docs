@@ -24,6 +24,8 @@ public class Volume extends AbstractEntity implements EntityItem<Long> {
     @ManyToOne
     @JoinColumn(name = "client")
     private Client client;
+    @ManyToOne
+    private CabinetRow cabinetRow;
 
     private static final DateTimeFormatter DATE_FORMATTER_yyyy = DateTimeFormatter.ofPattern("yyyy");
 
@@ -35,6 +37,7 @@ public class Volume extends AbstractEntity implements EntityItem<Long> {
         this.volumeNo = builder.volumeNo;
         this.year = builder.year;
         this.client = builder.client;
+        this.cabinetRow = builder.cabinetRow;
     }
 
 
@@ -43,6 +46,7 @@ public class Volume extends AbstractEntity implements EntityItem<Long> {
         private final Integer volumeNo;
         private Year year;
         public Client client;
+        public CabinetRow cabinetRow;
 
         public VolumeBuilder(Integer volumeNo) {
             this.volumeNo = volumeNo;
@@ -60,6 +64,11 @@ public class Volume extends AbstractEntity implements EntityItem<Long> {
 
         public VolumeBuilder client(Client client){
             this.client = client;
+            return this;
+        }
+
+        public VolumeBuilder cabinetRow(CabinetRow cabinetRow){
+            this.cabinetRow = cabinetRow;
             return this;
         }
 
@@ -88,6 +97,10 @@ public class Volume extends AbstractEntity implements EntityItem<Long> {
         return client;
     }
 
+    public CabinetRow getCabinetRow() {
+        return cabinetRow;
+    }
+
     @Override
     public Long getId() {
         return volumeId;
@@ -99,5 +112,6 @@ public class Volume extends AbstractEntity implements EntityItem<Long> {
                 .add("volumeNo", volumeNo)
                 .add("year", year == null ? "" : DATE_FORMATTER_yyyy.format(year));
         client.addJson(builder);
+        cabinetRow.addJson(builder);
     }
 }

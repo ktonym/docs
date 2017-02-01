@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 
@@ -35,11 +36,16 @@ public class VolumeHandler extends AbstractHandler  {
         JsonObject jsonObject = parseJsonObject(jsonData);
         Long clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
         Integer volumeNo = ((JsonNumber) jsonObject.get("volumeNo")).intValue();
-        logger.info("Peeking at value of year...");
-        logger.info( jsonObject.get("year").toString());
-        Year year = Year.of(((JsonNumber) jsonObject.get("year")).intValue());
+        Long rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
+        /*logger.info("Peeking at value of year...");
+        logger.info( jsonObject.get("year").toString());*/
 
-        Result<Volume> ar = volumeService.create(clientId,volumeNo,year,"akipkoech");
+        String yearStr = jsonObject.getString("year");
+
+//        Year year = Year.of(((JsonNumber) jsonObject.get("year")).intValue());
+        Year year = Year.parse(yearStr,YEAR_FORMAT_yyyy);
+
+        Result<Volume> ar = volumeService.create(rowId,clientId,volumeNo,year,"akipkoech");
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
         } else {
@@ -55,9 +61,11 @@ public class VolumeHandler extends AbstractHandler  {
         Long volumeId = ((JsonNumber) jsonObject.get("volumeId")).longValue();
         Long clientId = ((JsonNumber) jsonObject.get("clientId")).longValue();
         Integer volumeNo = ((JsonNumber) jsonObject.get("volumeNo")).intValue();
-        Year year = Year.of(((JsonNumber) jsonObject.get("year")).intValue());
+        Long rowId = ((JsonNumber) jsonObject.get("rowId")).longValue();
+        String yearStr = jsonObject.getString("year");
+        Year year = Year.parse(yearStr,YEAR_FORMAT_yyyy);
 
-        Result<Volume> ar = volumeService.update(volumeId,clientId,volumeNo,year,"akipkoech" );
+        Result<Volume> ar = volumeService.update(rowId,volumeId,clientId,volumeNo,year,"akipkoech" );
         if(ar.isSuccess()){
             return getJsonSuccessData(ar.getData());
         } else {
@@ -106,5 +114,20 @@ public class VolumeHandler extends AbstractHandler  {
             return getJsonErrorMsg(ar.getMsg());
         }
     }
+
+    @RequestMapping(value = "/findByRow", method = RequestMethod.GET, produces = {"application/json"})
+    @ResponseBody
+    public String findByRow(HttpServletRequest request, @RequestParam(value = "rowId") String rowIdStr){
+
+        Long rowId = Long.valueOf(rowIdStr);
+
+        Result<List<Volume>> ar = volumeService.findByRowId(rowId, "Akipkoech");
+        if(ar.isSuccess()){
+            return getJsonSuccessData(ar.getData());
+        } else {
+            return getJsonErrorMsg(ar.getMsg());
+        }
+    }
+
 
 }
